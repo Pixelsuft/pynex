@@ -35,7 +35,7 @@ class NFps:
 
     def get_fps_float(self) -> float:
         try:
-            return 1 / self.delta
+            return self.speed_hack / self.delta
         except ZeroDivisionError:
             return self.fps
 
