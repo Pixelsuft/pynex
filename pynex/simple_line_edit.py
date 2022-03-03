@@ -100,9 +100,13 @@ class NSimpleLineEdit:
 
     def process_key(self, event: pygame.event.Event, text: str) -> None:
         if event.key == pygame.K_BACKSPACE:
+            self.timer.color_rate = 0.0
+            self.draw_blink = True
             if len(text) > 0:
                 self.text = text[:-1]
         elif event.unicode:
+            self.timer.color_rate = 0.0
+            self.draw_blink = False
             self.text = text + event.unicode
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
@@ -152,7 +156,6 @@ class NSimpleLineEdit:
             self.on_focus_leave(event.pos, event.button)  # type: ignore
 
     def _on_key_down(self, event: pygame.event.Event, bind: bool) -> None:
-        self.timer.current_rate = 0.0
         self.process_key(event, self.text)
         self.redraw(self.text)
         if bind:
