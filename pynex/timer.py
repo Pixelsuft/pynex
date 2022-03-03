@@ -41,7 +41,7 @@ class NTimer:
     def stop(self) -> None:
         self.is_enabled = False
 
-    def draw(self, parent: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
+    def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
         if not self.is_enabled:
             return
         self.current_rate += delta

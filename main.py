@@ -87,6 +87,18 @@ pynex.NAnimatedCheckBox(
     auto_size_box=True
 ).set('checked', True).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_clear_bg)
 
+pynex.NSimpleLineEdit(
+    main_window,
+    font24,
+    (200, 200),
+    'Hello, world',
+    (0, 0, 0),
+    0.5,
+    (225, 225, 225),
+    True,
+    False
+).set('z_order', 4).set('w', 400).set('h', 32)
+
 color_fade = pynex.NSimpleColorFade(
     main_window,
     time=10 if pynex.is_android else 3,
@@ -94,7 +106,7 @@ color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
-main_window.child.sort()
+main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
 clock = pynex.NFps(60, unlocked=True)
 

@@ -37,6 +37,7 @@ class NMainFrame:
         self.remove_child = self.child.remove_child
         self.export_child = self.child.export_child
         self.import_child = self.child.import_child
+        self.sort_child = self.child.sort
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
