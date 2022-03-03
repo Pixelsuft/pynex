@@ -2,7 +2,7 @@ import pygame
 from . import *
 
 
-class NAnimatedCheckBox:
+class NCheckBoxAnimated:
     def __init__(
             self,
             parent: any,
@@ -16,7 +16,7 @@ class NAnimatedCheckBox:
             anti_alias: bool = True,
             stretch: bool = False
     ) -> None:
-        super(NAnimatedCheckBox, self).__init__()
+        super(NCheckBoxAnimated, self).__init__()
         self.font = font
         self.x, self.y = xy
         self.w, self.h = 0, 0
@@ -225,3 +225,6 @@ class NAnimatedCheckBox:
     def _on_key_up(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
             self.on_key_up(event)  # type: ignore
+
+    def __bool__(self) -> bool:
+        return self.checked

@@ -220,3 +220,6 @@ class NCheckBox:
     def _on_key_up(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
             self.on_key_up(event)  # type: ignore
+
+    def __bool__(self) -> bool:
+        return self.checked

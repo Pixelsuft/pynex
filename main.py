@@ -78,7 +78,7 @@ pynex.NWinAnimatedButton(
     auto_size=True
 ).set('id', 'b1').set('z_order', 2).set('on_click', change_button_text_pos)
 
-pynex.NAnimatedCheckBox(
+pynex.NCheckBoxAnimated(
     main_window,
     font24,
     (200, 0),

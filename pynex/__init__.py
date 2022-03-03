@@ -12,5 +12,5 @@ from .win_button import NWinButton
 from .simple_color_fade import NSimpleColorFade
 from .win_animated_button import NWinAnimatedButton
 from .checkbox import NCheckBox
-from .animated_checkbox import NAnimatedCheckBox
+from .checkbox_animated import NCheckBoxAnimated
 from .simple_line_edit import NSimpleLineEdit
