@@ -7,3 +7,6 @@ __pycache__
 build
 bin
 out
+*egg-info
+build
+dist

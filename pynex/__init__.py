@@ -14,3 +14,6 @@ from .win_animated_button import NWinAnimatedButton
 from .checkbox import NCheckBox
 from .checkbox_animated import NCheckBoxAnimated
 from .simple_line_edit import NSimpleLineEdit
+
+
+__version__ = '0.0.1'
