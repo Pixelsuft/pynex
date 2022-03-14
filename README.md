@@ -1,11 +1,11 @@
 # pynex
 PyGame-based GUI Library.
 ## Install
-On Windows: <br />
+On Windows:
 ```sh
 python -m pip install pynex
-``` <br />
-On Linux: <br />
+```
+On Linux:
 ```sh
 python3 -m pip install pynex
 ```
