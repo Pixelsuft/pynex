@@ -2,7 +2,7 @@ import pygame
 from . import *
 
 
-class NCheckBoxAnimated:
+class NAnimatedCheckBox:
     def __init__(
             self,
             parent: any,
@@ -16,7 +16,7 @@ class NCheckBoxAnimated:
             anti_alias: bool = True,
             stretch: bool = False
     ) -> None:
-        super(NCheckBoxAnimated, self).__init__()
+        super(NAnimatedCheckBox, self).__init__()
         self.font = font
         self.x, self.y = xy
         self.w, self.h = 0, 0

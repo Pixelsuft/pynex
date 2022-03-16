@@ -1,3 +1,4 @@
+import random
 import pynex
 import pygame
 
@@ -78,7 +79,7 @@ pynex.NWinAnimatedButton(
     auto_size=True
 ).set('id', 'b1').set('z_order', 2).set('on_click', change_button_text_pos)
 
-pynex.NCheckBoxAnimated(
+pynex.NAnimatedCheckBox(
     main_window,
     font24,
     (200, 0),
@@ -101,7 +102,7 @@ pynex.NSimpleLineEdit(
 
 color_fade = pynex.NSimpleColorFade(
     main_window,
-    time=10 if pynex.is_android else 3,
+    time=3,
     from_color=pynex.random_color(),
     to_color=(240, 240, 240)
 )
@@ -114,6 +115,12 @@ while running:
     main_window.process_events(pygame.event.get())
     if not clock.tick():
         continue
+    if not color_fade.is_enabled:
+        color_fade.create(
+            time=random.randint(3, 10),
+            from_color=color_fade.color,
+            to_color=pynex.random_color()
+        )
     if clear_bg:
         screen.fill(color_fade.color)
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
