@@ -62,7 +62,7 @@ def on_mouse_wheel(rel, touch, flipped) -> None:
     main_window.scroll_y += rel[1] * 5
 
 
-pynex.NImage(
+img = pynex.NImage(
     main_window,
     image,
     (0, 150)
@@ -107,6 +107,8 @@ color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
+# TODO: random filled image
+
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
 clock = pynex.NFps(60, unlocked=True)
@@ -123,6 +125,7 @@ while running:
         )
     if clear_bg:
         screen.fill(color_fade.color)
+    img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()
