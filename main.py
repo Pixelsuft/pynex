@@ -5,8 +5,7 @@ import pygame
 pynex.request_android_default_permissions()
 pygame.init()
 
-# TODO: pygame.SCALED on android
-screen = pygame.display.set_mode((640, 480), pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN)
+screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN)
 main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex')
 

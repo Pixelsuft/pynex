@@ -2,6 +2,7 @@ import pygame
 from . import *
 
 FORCE_FULL_SCREEN = pygame.FULLSCREEN if is_android else 0
+FORCE_SCALED = pygame.SCALED if is_android else 0
 
 LABEL_ALIGN_LEFT = 0
 LABEL_ALIGN_CENTER = 1

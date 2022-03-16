@@ -35,7 +35,7 @@ version = 0.1
 # version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
-requirements = python3,pygame,Pillow
+requirements = python3,pygame,Pillow,pynex
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

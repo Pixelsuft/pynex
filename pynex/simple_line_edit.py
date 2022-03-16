@@ -32,7 +32,7 @@ class NSimpleLineEdit:
         self.is_focusable = True
         self.enable_scroll = True
         self.usable = True
-        self.draw_blink = False
+        self.blink = ''
         self.blink_time = blink_time
         self.text = text
         self.x_offset = 0
@@ -60,8 +60,7 @@ class NSimpleLineEdit:
     def redraw(self, text: str) -> None:
         if text.count('\n') > 0:
             text = text.replace('\n', '')
-        if self.draw_blink:
-            text += '|'
+        text += self.blink
         self.surface = self.font.render(
             text,
             self.anti_alias,
@@ -95,18 +94,18 @@ class NSimpleLineEdit:
         )
 
     def on_blink_tick(self, delta: float) -> None:
-        self.draw_blink = not self.draw_blink
+        self.blink = '' if self.blink else '|'
         self.redraw(self.text)
 
     def process_key(self, event: pygame.event.Event, text: str) -> None:
         if event.key == pygame.K_BACKSPACE:
-            self.timer.color_rate = 0.0
-            self.draw_blink = True
+            self.timer.current_rate = 0.0
+            self.blink = '|'
             if len(text) > 0:
                 self.text = text[:-1]
         elif event.unicode:
-            self.timer.color_rate = 0.0
-            self.draw_blink = False
+            self.timer.current_rate = 0.0
+            self.blink = ''
             self.text = text + event.unicode
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
@@ -140,7 +139,7 @@ class NSimpleLineEdit:
             self.on_click(event.pos)
 
     def _on_focus_enter(self, event: pygame.event.Event, bind: bool) -> None:
-        self.draw_blink = True
+        self.blink = '|'
         self.redraw(self.text)
         self.timer.run()
         pygame.key.start_text_input()
@@ -150,7 +149,8 @@ class NSimpleLineEdit:
     def _on_focus_leave(self, event: pygame.event.Event, bind: bool) -> None:
         pygame.key.stop_text_input()
         self.timer.stop()
-        self.draw_blink = False
+        self.timer.current_rate = 0.0
+        self.blink = ''
         self.redraw(self.text)
         if bind:
             self.on_focus_leave(event.pos, event.button)  # type: ignore
