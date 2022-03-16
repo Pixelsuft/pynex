@@ -107,8 +107,6 @@ color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
-# TODO: random filled image
-
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
 clock = pynex.NFps(60, unlocked=True)
