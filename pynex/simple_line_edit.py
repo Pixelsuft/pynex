@@ -32,11 +32,14 @@ class NSimpleLineEdit:
         self.is_focusable = True
         self.enable_scroll = True
         self.usable = True
-        self.blink = ''
+        self.blink_symbol = '|'
+        self.no_blink_symbol = ' '
+        self.blink = self.no_blink_symbol
         self.blink_time = blink_time
         self.text = text
         self.x_offset = 0
         self.y_offset = 0
+        self.blink_pos = 0
         self.bg_border_radius = 0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
@@ -53,6 +56,8 @@ class NSimpleLineEdit:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
+        if name == 'text':
+            self.blink_pos = len(value)
         if name in ('text', 'color', 'anti_alias', 'mutli_line_align', 'stretch', 'auto_size'):
             self.redraw(self.text)
         return self
@@ -60,9 +65,8 @@ class NSimpleLineEdit:
     def redraw(self, text: str) -> None:
         if text.count('\n') > 0:
             text = text.replace('\n', '')
-        text += self.blink
         self.surface = self.font.render(
-            text,
+            text[:self.blink_pos] + self.blink + text[self.blink_pos:],
             self.anti_alias,
             self.color
         )
@@ -94,19 +98,29 @@ class NSimpleLineEdit:
         )
 
     def on_blink_tick(self, delta: float) -> None:
-        self.blink = '' if self.blink else '|'
+        self.blink = self.no_blink_symbol if self.blink == self.blink_symbol else self.blink_symbol
         self.redraw(self.text)
 
     def process_key(self, event: pygame.event.Event, text: str) -> None:
         if event.key == pygame.K_BACKSPACE:
             self.timer.current_rate = 0.0
-            self.blink = '|'
+            self.blink = self.blink_symbol
             if len(text) > 0:
+                self.blink_pos -= 1
                 self.text = text[:-1]
+        elif event.key == pygame.K_RIGHT:
+            if len(self.text) > self.blink_pos:
+                self.blink_pos += 1
+        elif event.key == pygame.K_LEFT:
+            if self.blink_pos > 0:
+                self.blink_pos -= 1
+        elif event.key == pygame.K_DELETE:
+            self.text = self.text[:self.blink_pos] + self.text[self.blink_pos + 1:]
         elif event.unicode:
             self.timer.current_rate = 0.0
-            self.blink = ''
+            self.blink = self.no_blink_symbol
             self.text = text + event.unicode
+            self.blink_pos += len(event.unicode)
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
@@ -139,7 +153,7 @@ class NSimpleLineEdit:
             self.on_click(event.pos)
 
     def _on_focus_enter(self, event: pygame.event.Event, bind: bool) -> None:
-        self.blink = '|'
+        self.blink = self.blink_symbol
         self.redraw(self.text)
         self.timer.run()
         pygame.key.start_text_input()
@@ -150,7 +164,7 @@ class NSimpleLineEdit:
         pygame.key.stop_text_input()
         self.timer.stop()
         self.timer.current_rate = 0.0
-        self.blink = ''
+        self.blink = self.no_blink_symbol
         self.redraw(self.text)
         if bind:
             self.on_focus_leave(event.pos, event.button)  # type: ignore
