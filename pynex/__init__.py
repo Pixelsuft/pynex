@@ -16,4 +16,4 @@ from .checkbox_animated import NAnimatedCheckBox
 from .simple_line_edit import NSimpleLineEdit
 
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
