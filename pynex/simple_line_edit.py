@@ -106,8 +106,8 @@ class NSimpleLineEdit:
             self.timer.current_rate = 0.0
             self.blink = self.blink_symbol
             if len(text) > 0:
+                self.text = self.text[:self.blink_pos - 1] + self.text[self.blink_pos:]
                 self.blink_pos -= 1
-                self.text = text[:-1]
         elif event.key == pygame.K_RIGHT:
             if len(self.text) > self.blink_pos:
                 self.blink_pos += 1
