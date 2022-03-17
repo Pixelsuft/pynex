@@ -4,20 +4,25 @@ import pynex
 import pygame
 
 
+# Init
 pynex.request_android_default_permissions()
 pygame.init()
 
+# Create window and main frame
 screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN)
 main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex')
 
+# Load things
 font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
 font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 
+# Vars
 running = True
 clear_bg = True
 
+# Create label object with events
 pynex.NLabel(
     main_window,
     font36,
@@ -32,6 +37,7 @@ pynex.NLabel(
         lambda *args: main_window.find_by_id('l1').set('text', f'Hello, world!\n{round(pynex.random_float(10, 1000))}')
 ).set('cursor', pynex.system_cursors.get('HAND')).set('multi_lines_align', pynex.LABEL_ALIGN_CENTER)
 
+# Create label object for FPS
 fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
     .set('z_order', 999).set('enable_scroll', False)
 
@@ -63,12 +69,14 @@ def on_mouse_wheel(rel, touch, flipped) -> None:
     main_window.scroll_y += rel[1] * 5
 
 
+# Create image object
 img = pynex.NImage(
     main_window,
     image,
     (0, 150)
 ).set('z_order', -1).set('hook_mouse', False)
 
+# Create button object
 pynex.NWinAnimatedButton(
     main_window,
     font24,
@@ -80,6 +88,7 @@ pynex.NWinAnimatedButton(
     auto_size=True
 ).set('id', 'b1').set('z_order', 2).set('on_click', change_button_text_pos)
 
+# Create check box object
 pynex.NAnimatedCheckBox(
     main_window,
     font24,
@@ -89,6 +98,7 @@ pynex.NAnimatedCheckBox(
     auto_size_box=True
 ).set('checked', True).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_clear_bg)
 
+# Create edit object
 pynex.NSimpleLineEdit(
     main_window,
     font24,
@@ -101,6 +111,7 @@ pynex.NSimpleLineEdit(
     False
 ).set('z_order', 4).set('w', 400).set('h', 32)
 
+# Create color fade object for background
 color_fade = pynex.NSimpleColorFade(
     main_window,
     time=3,
@@ -108,8 +119,10 @@ color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
+# Sort child by Z order
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
+# Create FPS clock (time.time for windows, because time.monotonic is limited to 60 FPS on it (why?))
 clock = pynex.NFps(60, unlocked=True, time_function=time.time if pynex.is_windows else time.monotonic)
 
 while running:
