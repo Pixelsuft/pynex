@@ -1,3 +1,4 @@
+import time
 import random
 import pynex
 import pygame
@@ -109,7 +110,7 @@ color_fade = pynex.NSimpleColorFade(
 
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
-clock = pynex.NFps(60, unlocked=True)
+clock = pynex.NFps(60, unlocked=True, time_function=time.time if pynex.is_windows else time.monotonic)
 
 while running:
     main_window.process_events(pygame.event.get())

@@ -6,7 +6,8 @@ class NFps:
             self,
             fps: any,
             unlocked: bool = False,
-            smooth_fix: bool = False
+            smooth_fix: bool = False,
+            time_function: any = time.time
     ) -> None:
         super(NFps, self).__init__()
         self.fps = float(fps)
@@ -15,14 +16,15 @@ class NFps:
         self.unlocked = unlocked
         self.smooth_fix = smooth_fix
         self.speed_hack = 1.0
-        self.last_tick = time.time()
+        self.time_func = time_function
+        self.last_tick = self.time_func()
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
         return self
 
     def tick(self) -> bool:
-        now = time.time()
+        now = self.time_func()
         if not self.unlocked and now < self.last_tick + self.frame_rate:
             return False
         if self.smooth_fix:
