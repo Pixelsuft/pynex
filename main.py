@@ -26,6 +26,7 @@ template = '''DPI: %dpi%
 RES: %res%
 SCROLL: %scroll%'''
 dpi = pynex.get_dpi()
+image_rot_right = bool(random.randint(0, 1))
 
 # Create label object with events
 pynex.NLabel(
@@ -93,6 +94,7 @@ def on_mouse_wheel(rel, touch, flipped):
 def make_screenshot(pos):
     if not pynex.is_android:
         pynex.surface_to_image(screen).show()
+        return
     try:
         pynex.surface_to_image(screen).save('/storage/emulated/0/pynex.png', 'PNG')
         main_window.find_by_id('b2').set('text', 'Saved to\n/storage/emulated/0/pynex.png')
@@ -209,7 +211,10 @@ while running:
         )
     if clear_bg:
         screen.fill(color_fade.color)
-    img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
+    if image_rot_right:
+        img.set('image', pygame.transform.rotate(image, 360 - (clock.last_tick * 100) % 360))
+    else:
+        img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()
