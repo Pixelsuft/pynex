@@ -103,7 +103,15 @@ def make_screenshot(pos):
 
 
 def with_dpi(pos):
-    last_width, last_height = screen.get_size()
+    if dpi > 0:
+        default_dpi = 96
+        new_width = round(screen.get_width() * default_dpi / dpi)
+        new_height = round(screen.get_height() * default_dpi / dpi)
+        pygame.display.set_mode(
+            (new_width, new_height),
+            pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN | pynex.FORCE_SCALED
+        )
+    main_window.find_by_id('b3').set('is_visible', False)
     update_info()
 
 
@@ -143,7 +151,7 @@ pynex.NWinAnimatedButton(
     main_window,
     font24,
     (400, 400),
-    'Scale by DPI!',
+    'Scale by DPI! (Android)',
     (150, 40),
     (0, 0, 0),
     animation_time=0.2,
