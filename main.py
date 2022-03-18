@@ -1,5 +1,6 @@
 import time
 import random
+import math
 import pynex
 import pygame
 
@@ -24,7 +25,8 @@ running = True
 clear_bg = True
 template = '''DPI: %dpi%
 RES: %res%
-SCROLL: %scroll%'''
+SCROLL: %scroll%
+SLIDER VALUE: %s1%'''
 dpi = pynex.get_dpi()
 image_rot_right = bool(random.randint(0, 1))
 
@@ -59,7 +61,8 @@ fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
 
 def update_info(*args):
     info_label.set('text', template.replace('%dpi%', str(dpi)).replace('%res%', str(screen.get_size()))\
-                   .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y))))
+                   .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y)))\
+                   .replace('%s1%', str(round(main_window.find_by_id('s1').value))))
 
 
 def toggle_clear_bg(current_state):
@@ -140,7 +143,7 @@ pynex.NWinAnimatedButton(
 pynex.NWinAnimatedButton(
     main_window,
     font24,
-    (400, 300),
+    (400, 240),
     'Make Screenshot!',
     (150, 40),
     (0, 0, 0),
@@ -152,7 +155,7 @@ pynex.NWinAnimatedButton(
 pynex.NWinAnimatedButton(
     main_window,
     font24,
-    (400, 400),
+    (400, 300),
     'Scale by DPI! (Android)',
     (150, 40),
     (0, 0, 0),
@@ -175,13 +178,27 @@ pynex.NSimpleLineEdit(
     main_window,
     font24,
     (300, 200),
-    'Hello, world',
+    'Hello, world!',
     (0, 0, 0),
     0.5,
     (225, 225, 225),
     True,
     False
 ).set('z_order', 4).set('w', 400).set('h', 32)
+
+# Create slider object
+pynex.NHorizontalSlider(
+    main_window,
+    (600, 350)
+).set('z_order', 5).set('id', 's1').set('value', 50).set('on_change', update_info)
+
+# Create slider object for SIN
+sin_slider = pynex.NHorizontalSlider(
+    main_window,
+    (300, 350),
+    min_value=0,
+    max_value=2
+).set('z_order', 5).set('is_enabled', False)
 
 # Create color fade object for background
 color_fade = pynex.NSimpleColorFade(
@@ -215,6 +232,7 @@ while running:
         img.set('image', pygame.transform.rotate(image, 360 - (clock.last_tick * 100) % 360))
     else:
         img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
+    sin_slider.set('value', math.sin(clock.last_tick) + 1)
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()

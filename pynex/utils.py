@@ -91,6 +91,11 @@ def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) ->
            child.h + child.y + offset_y > xy[1] >= child.y + offset_y
 
 
+def is_colliding_rect(rect: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
+    return rect[2] + rect[0] + offset_x > xy[0] >= rect[0] + offset_x and\
+           rect[3] + rect[1] + offset_y > xy[1] >= rect[1] + offset_y
+
+
 def random_color(use_alpha: bool = False) -> tuple:
     return tuple(
         random.randint(0, 255) for _x in range(4 if use_alpha else 3)

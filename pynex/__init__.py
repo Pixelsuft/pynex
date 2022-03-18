@@ -14,7 +14,7 @@ from .win_animated_button import NWinAnimatedButton
 from .checkbox import NCheckBox
 from .checkbox_animated import NAnimatedCheckBox
 from .simple_line_edit import NSimpleLineEdit
-# TODO: slider
+from .horizontal_slider import NHorizontalSlider
 
 
 __version__ = '0.0.5'
