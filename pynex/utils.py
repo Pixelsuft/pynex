@@ -11,6 +11,18 @@ try:
     is_android = True
 except ImportError:
     is_android = False
+try:
+    import jnius  # type: ignore
+    is_jni = True
+except ImportError:
+    is_jni = False
+try:
+    import win32api  # type: ignore
+    import win32gui  # type: ignore
+    import win32con  # type: ignore
+    is_winapi = True
+except ImportError:
+    is_winapi = False
 
 
 encoding = sys.getdefaultencoding()

@@ -119,7 +119,7 @@ class NSimpleLineEdit:
         elif event.unicode:
             self.timer.current_rate = 0.0
             self.blink = self.no_blink_symbol
-            self.text = text + event.unicode
+            self.text = self.text[:self.blink_pos] + event.unicode + self.text[self.blink_pos:]
             self.blink_pos += len(event.unicode)
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:

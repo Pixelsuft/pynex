@@ -64,9 +64,21 @@ def on_mouse_move(pos, rel, buttons, touch):
     main_window.scroll_y += rel[1]
 
 
-def on_mouse_wheel(rel, touch, flipped) -> None:
+def on_mouse_wheel(rel, touch, flipped):
     main_window.scroll_x += rel[0] * 5
     main_window.scroll_y += rel[1] * 5
+
+
+def make_screenshot(pos):
+    if not pynex.is_android:
+        pynex.surface_to_image(screen).show()
+    try:
+        pynex.surface_to_image(screen).save('/storage/emulated/0/pynex.png', 'PNG')
+        main_window.find_by_id('b2').set('text', 'Saved to\n/storage/emulated/0/pynex.png')
+    except Exception as _err:
+        if _err:
+            'PyCharm Hide Warning'
+        main_window.find_by_id('b2').set('text', 'Failed to save!')
 
 
 # Create image object
@@ -87,6 +99,18 @@ pynex.NWinAnimatedButton(
     animation_time=0.2,
     auto_size=True
 ).set('id', 'b1').set('z_order', 2).set('on_click', change_button_text_pos)
+
+# Create button object for screenshot
+pynex.NWinAnimatedButton(
+    main_window,
+    font24,
+    (400, 300),
+    'Make Screenshot!',
+    (150, 40),
+    (0, 0, 0),
+    animation_time=0.2,
+    auto_size=True
+).set('id', 'b2').set('z_order', 2).set('on_click', make_screenshot)
 
 # Create check box object
 pynex.NAnimatedCheckBox(
