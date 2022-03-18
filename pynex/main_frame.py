@@ -84,7 +84,8 @@ class NMainFrame:
             self.is_mouse_left_down = True
             hover = self
             for child in self.child.child[::-1]:
-                if child.usable and child.hook_mouse and is_colliding(child, event.pos, self.scroll_x, self.scroll_y):
+                if child.usable and child.hook_mouse and child.is_enabled\
+                        and is_colliding(child, event.pos, self.scroll_x, self.scroll_y):
                     hover = child
                     break
             if not hover == self.last_hover:

@@ -106,14 +106,14 @@ def make_screenshot(pos):
 
 def with_dpi(pos):
     if dpi > 0:
-        default_dpi = 96
+        default_dpi = 240 if pynex.is_android else 96
         new_width = round(screen.get_width() * default_dpi / dpi)
         new_height = round(screen.get_height() * default_dpi / dpi)
         pygame.display.set_mode(
             (new_width, new_height),
             pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN | pynex.FORCE_SCALED
         )
-    main_window.find_by_id('b3').set('is_visible', False)
+    main_window.find_by_id('b3').set('is_enabled', False)
     update_info()
 
 
