@@ -17,4 +17,4 @@ from .simple_line_edit import NSimpleLineEdit
 # TODO: slider
 
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
