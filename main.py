@@ -16,11 +16,16 @@ pygame.display.set_caption('Pixelsuft pynex')
 # Load things
 font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
 font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
+font12 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 12)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 
 # Vars
 running = True
 clear_bg = True
+template = '''DPI: %dpi%
+RES: %res%
+SCROLL: %scroll%'''
+dpi = pynex.get_dpi()
 
 # Create label object with events
 pynex.NLabel(
@@ -37,9 +42,23 @@ pynex.NLabel(
         lambda *args: main_window.find_by_id('l1').set('text', f'Hello, world!\n{round(pynex.random_float(10, 1000))}')
 ).set('cursor', pynex.system_cursors.get('HAND')).set('multi_lines_align', pynex.LABEL_ALIGN_CENTER)
 
+# Create info label
+info_label = pynex.NLabel(
+    main_window,
+    font24,
+    (0, 150),
+    template,
+    (255, 0, 0)
+).set('id', 'l2').set('z_order', 1)
+
 # Create label object for FPS
 fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
     .set('z_order', 999).set('enable_scroll', False)
+
+
+def update_info(*args):
+    info_label.set('text', template.replace('%dpi%', str(dpi)).replace('%res%', str(screen.get_size()))\
+                   .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y))))
 
 
 def toggle_clear_bg(current_state):
@@ -62,11 +81,13 @@ def on_mouse_move(pos, rel, buttons, touch):
         return
     main_window.scroll_x += rel[0]
     main_window.scroll_y += rel[1]
+    update_info()
 
 
 def on_mouse_wheel(rel, touch, flipped):
     main_window.scroll_x += rel[0] * 5
     main_window.scroll_y += rel[1] * 5
+    update_info()
 
 
 def make_screenshot(pos):
@@ -79,6 +100,11 @@ def make_screenshot(pos):
         if _err:
             'PyCharm Hide Warning'
         main_window.find_by_id('b2').set('text', 'Failed to save!')
+
+
+def with_dpi(pos):
+    last_width, last_height = screen.get_size()
+    update_info()
 
 
 # Create image object
@@ -112,6 +138,18 @@ pynex.NWinAnimatedButton(
     auto_size=True
 ).set('id', 'b2').set('z_order', 2).set('on_click', make_screenshot)
 
+# Create button object for dpi scale
+pynex.NWinAnimatedButton(
+    main_window,
+    font24,
+    (400, 400),
+    'Scale by DPI!',
+    (150, 40),
+    (0, 0, 0),
+    animation_time=0.2,
+    auto_size=True
+).set('id', 'b3').set('z_order', 2).set('on_click', with_dpi)
+
 # Create check box object
 pynex.NAnimatedCheckBox(
     main_window,
@@ -126,7 +164,7 @@ pynex.NAnimatedCheckBox(
 pynex.NSimpleLineEdit(
     main_window,
     font24,
-    (200, 200),
+    (300, 200),
     'Hello, world',
     (0, 0, 0),
     0.5,
@@ -143,9 +181,11 @@ color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
+update_info()
 # Sort child by Z order
 main_window.sort_child()
-main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)
+main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)\
+    .set('on_resize', update_info)
 # Create FPS clock (time.time for windows, because time.monotonic is limited to 60 FPS on it (why?))
 clock = pynex.NFps(60, unlocked=True, time_function=time.time if pynex.is_windows else time.monotonic)
 

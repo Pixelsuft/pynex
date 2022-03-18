@@ -20,6 +20,7 @@ try:
     import win32api  # type: ignore
     import win32gui  # type: ignore
     import win32con  # type: ignore
+    import win32print  # type: ignore
     is_winapi = True
 except ImportError:
     is_winapi = False
@@ -46,6 +47,18 @@ def round_tuple(_tuple: any) -> tuple:
 
 def random_float(a: float, b: float) -> float:
     return random.random() * (b - a) + a
+
+
+def get_dpi() -> int:
+    if is_android and is_jni:
+        return jnius.autoclass('android.util.DisplayMetrics')().getDeviceDensity()
+    if is_windows and is_winapi:
+        hdc = win32gui.GetDC(0)
+        result = max(
+            win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSX), win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSY)
+        )
+        return result
+    return 0
 
 
 def p(*path) -> str:
