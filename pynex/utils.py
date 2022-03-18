@@ -14,7 +14,7 @@ except ImportError:
 try:
     import jnius  # type: ignore
     is_jni = True
-except ImportError:
+except:  # type: ignore
     is_jni = False
 try:
     import win32api  # type: ignore
