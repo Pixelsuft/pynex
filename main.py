@@ -182,7 +182,7 @@ pynex.NAnimatedCheckBox(
     main_window,
     font24,
     (200, 0),
-    'Clear Background',
+    'Fill Background',
     (255, 0, 0),
     auto_size_box=True
 ).set('checked', True).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_clear_bg)
