@@ -18,4 +18,4 @@ from .horizontal_slider import NHorizontalSlider
 from .vertical_slider import NVerticalSlider
 
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
