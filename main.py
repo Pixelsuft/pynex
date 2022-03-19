@@ -22,6 +22,7 @@ image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png'))
 python_image = pygame.transform.scale(
     pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha(), (500, 498)
 )
+pygame.display.set_icon(python_image)
 
 # Vars
 running = True
@@ -59,11 +60,11 @@ info_label = pynex.NLabel(
     (0, 150),
     template,
     (255, 0, 0)
-).set('id', 'l2').set('z_order', 1)
+).set('id', 'l2').set('z_order', 1).set('is_enabled', False)
 
 # Create label object for FPS
 fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
-    .set('z_order', 999).set('enable_scroll', False)
+    .set('z_order', 999).set('enable_scroll', False).set('is_enabled', False)
 
 
 def update_info(*args):
