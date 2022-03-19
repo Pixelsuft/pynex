@@ -109,7 +109,7 @@ def make_screenshot(pos):
         return
     try:
         pynex.surface_to_image(screen).save('/storage/emulated/0/pynex.png', 'PNG')
-        main_window.find_by_id('b2').set('text', 'Saved to\n/storage/emulated/0/pynex.png')
+        main_window.find_by_id('b2').set('text', 'Saved to pynex.png')
     except Exception as _err:
         if _err:
             'PyCharm Hide Warning'
@@ -182,7 +182,7 @@ pynex.NAnimatedCheckBox(
     main_window,
     font24,
     (200, 0),
-    'Fill Background',
+    'Clear Background',
     (255, 0, 0),
     auto_size_box=True
 ).set('checked', True).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_clear_bg)
