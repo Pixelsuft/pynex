@@ -21,6 +21,7 @@ class NTimer:
         self.usable = False
         self.is_enabled = False
         self.z_order = 0
+        self.id = 0
         self.current_rate = 0.0
         if auto_start:
             self.run()

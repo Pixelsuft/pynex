@@ -8,9 +8,9 @@ class NVerticalSlider:
             parent: any,
             xy: tuple,
             size: tuple = (22, 160),
-            value: int = 0,
-            min_value: int = 0,
-            max_value: int = 99
+            value: any = 0,
+            min_value: any = 0,
+            max_value: any = 99
     ) -> None:
         super(NVerticalSlider, self).__init__()
         self.x, self.y = xy

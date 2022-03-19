@@ -23,6 +23,7 @@ class NSimpleColorFade:
         ]
         self.color = round_tuple(self.current_color)
         self.current_rate = 0.0
+        self.id = 0
         self.usable = False
         self.is_enabled = False
         if auto_start:

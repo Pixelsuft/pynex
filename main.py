@@ -12,24 +12,30 @@ pygame.init()
 # Create window and main frame
 screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN)
 main_window = pynex.NMainFrame(screen)
-pygame.display.set_caption('Pixelsuft pynex')
+pygame.display.set_caption('Pixelsuft pynex example')
 
 # Load things
 font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
 font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
 font12 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 12)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
+python_image = pygame.transform.scale(
+    pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha(), (500, 498)
+)
 
 # Vars
 running = True
 clear_bg = True
+need_id = 0
 template = '''DPI: %dpi%
 RES: %res%
 SCROLL: %scroll%
-SLIDER 1 VALUE: %s1%
-SLIDER 2 VALUE: %s2%'''
+SPEED HACK VALUE: %s1%
+IMAGE VALUE: %s2%'''
 dpi = pynex.get_dpi()
+images_to_set = (image, python_image)
 image_rot_right = bool(random.randint(0, 1))
+image_rotation = 0
 
 # Create label object with events
 pynex.NLabel(
@@ -63,7 +69,7 @@ fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
 def update_info(*args):
     info_label.set('text', template.replace('%dpi%', str(dpi)).replace('%res%', str(screen.get_size()))\
                    .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y)))\
-                   .replace('%s1%', str(round(main_window.find_by_id('s1').value)))\
+                   .replace('%s1%', str(round(main_window.find_by_id('s1').value * 100) / 100))\
                    .replace('%s2%', str(round(main_window.find_by_id('s2').value))))
 
 
@@ -122,12 +128,17 @@ def with_dpi(pos):
     update_info()
 
 
+def choose_speed_hack(val):
+    clock.set('speed_hack', val)
+    update_info()
+
+
 # Create image object
 img = pynex.NImage(
     main_window,
-    image,
+    images_to_set[0],
     (0, 150)
-).set('z_order', -1).set('hook_mouse', False)
+).set('z_order', -1).set('id', 'i1').set('hook_mouse', False)
 
 # Create button object
 pynex.NWinAnimatedButton(
@@ -188,17 +199,23 @@ pynex.NSimpleLineEdit(
     False
 ).set('z_order', 4).set('w', 400).set('h', 32)
 
-# Create slider object
+# Create slider object for speed hack
 pynex.NHorizontalSlider(
     main_window,
-    (600, 350)
-).set('z_order', 5).set('id', 's1').set('value', 50).set('on_change', update_info)
+    (600, 350),
+    min_value=0.25,
+    max_value=10,
+    value=1
+).set('z_order', 5).set('id', 's1').set('on_change', choose_speed_hack)
 
-# Create slider object
-pynex.NVerticalSlider(
+# Create slider object for changing image
+image_changer = pynex.NVerticalSlider(
     main_window,
-    (600, 400)
-).set('z_order', 5).set('id', 's2').set('value', 50).set('on_change', update_info)
+    (600, 400),
+    value=0,
+    min_value=0,
+    max_value=len(images_to_set) - 1
+).set('z_order', 5).set('id', 's2').set('on_change', update_info)
 
 # Create slider object for SIN
 sin_slider = pynex.NHorizontalSlider(
@@ -245,9 +262,17 @@ while running:
     if clear_bg:
         screen.fill(color_fade.color)
     if image_rot_right:
-        img.set('image', pygame.transform.rotate(image, 360 - (clock.last_tick * 100) % 360))
+        image_rotation -= 100 * clock.delta * clock.speed_hack
+        while image_rotation <= 0:
+            image_rotation += 360
     else:
-        img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
+        image_rotation += 100 * clock.delta * clock.speed_hack
+        while image_rotation >= 360:
+            image_rotation -= 360
+    img.set(
+        'image',
+        pygame.transform.rotate(images_to_set[round(image_changer.value)], round(image_rotation))
+    )
     sin_slider.set('value', math.sin(clock.last_tick))
     cos_slider.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
