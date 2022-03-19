@@ -196,8 +196,16 @@ pynex.NHorizontalSlider(
 sin_slider = pynex.NHorizontalSlider(
     main_window,
     (300, 350),
-    min_value=0,
-    max_value=2
+    min_value=-1,
+    max_value=1
+).set('z_order', 5).set('is_enabled', False)
+
+# Create slider object for COS
+cos_slider = pynex.NHorizontalSlider(
+    main_window,
+    (300, 400),
+    min_value=-1,
+    max_value=1
 ).set('z_order', 5).set('is_enabled', False)
 
 # Create color fade object for background
@@ -232,7 +240,8 @@ while running:
         img.set('image', pygame.transform.rotate(image, 360 - (clock.last_tick * 100) % 360))
     else:
         img.set('image', pygame.transform.rotate(image, (clock.last_tick * 100) % 360))
-    sin_slider.set('value', math.sin(clock.last_tick) + 1)
+    sin_slider.set('value', math.sin(clock.last_tick))
+    cos_slider.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()
