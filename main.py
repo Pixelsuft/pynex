@@ -26,7 +26,8 @@ clear_bg = True
 template = '''DPI: %dpi%
 RES: %res%
 SCROLL: %scroll%
-SLIDER VALUE: %s1%'''
+SLIDER 1 VALUE: %s1%
+SLIDER 2 VALUE: %s2%'''
 dpi = pynex.get_dpi()
 image_rot_right = bool(random.randint(0, 1))
 
@@ -62,7 +63,8 @@ fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
 def update_info(*args):
     info_label.set('text', template.replace('%dpi%', str(dpi)).replace('%res%', str(screen.get_size()))\
                    .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y)))\
-                   .replace('%s1%', str(round(main_window.find_by_id('s1').value))))
+                   .replace('%s1%', str(round(main_window.find_by_id('s1').value)))\
+                   .replace('%s2%', str(round(main_window.find_by_id('s2').value))))
 
 
 def toggle_clear_bg(current_state):
@@ -191,6 +193,12 @@ pynex.NHorizontalSlider(
     main_window,
     (600, 350)
 ).set('z_order', 5).set('id', 's1').set('value', 50).set('on_change', update_info)
+
+# Create slider object
+pynex.NVerticalSlider(
+    main_window,
+    (600, 400)
+).set('z_order', 5).set('id', 's2').set('value', 50).set('on_change', update_info)
 
 # Create slider object for SIN
 sin_slider = pynex.NHorizontalSlider(
