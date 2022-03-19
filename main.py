@@ -263,11 +263,11 @@ while running:
     if clear_bg:
         screen.fill(color_fade.color)
     if image_rot_right:
-        image_rotation -= 100 * clock.delta * clock.speed_hack
+        image_rotation -= 25 * clock.delta * clock.speed_hack
         while image_rotation <= 0:
             image_rotation += 360
     else:
-        image_rotation += 100 * clock.delta * clock.speed_hack
+        image_rotation += 25 * clock.delta * clock.speed_hack
         while image_rotation >= 360:
             image_rotation -= 360
     img.set(
