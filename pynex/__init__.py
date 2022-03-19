@@ -17,4 +17,4 @@ from .simple_line_edit import NSimpleLineEdit
 from .horizontal_slider import NHorizontalSlider
 
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'

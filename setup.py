@@ -1,10 +1,31 @@
 import os
+import sys
+import shutil
 from setuptools import setup, find_packages
 from pynex import __version__ as version
 
 
 readme = open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r').read()
 requirements = ['pygame', 'Pillow']
+for i in sys.argv[1:]:
+    if not i.lower() == 'sdist' and not i.lower() == 'bdist_wheel':
+        continue
+    try:
+        shutil.rmtree(os.path.join(os.getcwd(), 'build'))
+    except Exception as __err:
+        if __err:
+            'Just for PyCharm'
+    try:
+        shutil.rmtree(os.path.join(os.getcwd(), 'dist'))
+    except Exception as __err:
+        if __err:
+            'Just for PyCharm'
+    try:
+        shutil.rmtree(os.path.join(os.getcwd(), 'pynex.egg-info'))
+    except Exception as __err:
+        if __err:
+            'Just for PyCharm'
+    break
 
 
 setup(
