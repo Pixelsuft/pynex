@@ -207,7 +207,7 @@ pynex.NHorizontalSlider(
     min_value=0.25,
     max_value=10,
     value=1
-).set('z_order', 5).set('id', 's1').set('on_change', choose_speed_hack)
+).set('z_order', 5).set('id', 's1').set('on_change', choose_speed_hack).set('page_step', 0.25)
 
 # Create slider object for changing image
 image_changer = pynex.NVerticalSlider(
@@ -216,7 +216,7 @@ image_changer = pynex.NVerticalSlider(
     value=0,
     min_value=0,
     max_value=len(images_to_set) - 1
-).set('z_order', 5).set('id', 's2').set('on_change', update_info)
+).set('z_order', 5).set('id', 's2').set('on_change', update_info).set('page_step', 1)
 
 # Create slider object for SIN
 sin_slider = pynex.NHorizontalSlider(
