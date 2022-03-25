@@ -130,6 +130,7 @@ def make_screenshot(pos):
 
 
 def with_dpi(pos):
+    main_window.find_by_id('c3').set('checked', False)
     if dpi > 0:
         default_dpi = 240 if pynex.is_android else 96
         new_width = round(screen.get_width() * default_dpi / dpi)
@@ -218,7 +219,7 @@ pynex.NAnimatedCheckBox(
     'Vertical Sync',
     (255, 0, 0),
     auto_size_box=True
-).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_vsync)
+).set('id', 'c3').set('z_order', 3).set('border_radius', 3).set('on_check', toggle_vsync)
 
 # Create edit object
 pynex.NSimpleLineEdit(
