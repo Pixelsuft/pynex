@@ -10,7 +10,7 @@ pynex.request_android_default_permissions()
 pygame.init()
 
 # Create window and main frame
-display_flags = pygame.RESIZABLE | pygame.DOUBLEBUF | pynex.FORCE_FULL_SCREEN
+display_flags = pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN  # | pygame.DOUBLEBUF
 screen = pygame.display.set_mode((800, 600), display_flags)
 main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex example')
@@ -78,6 +78,18 @@ def update_info(*args):
 def toggle_clear_bg(current_state):
     global clear_bg
     clear_bg = current_state
+
+
+def toggle_time_monotonic(current_state):
+    clock.set('time_func', time.monotonic if current_state else time.time)
+
+
+def toggle_vsync(current_state):
+    pygame.display.set_mode(
+        (800, 600),
+        display_flags | (pygame.SCALED if current_state else 0),  # From pygame
+        vsync=int(current_state)
+    )
 
 
 def change_button_text_pos(pos):
@@ -178,7 +190,7 @@ pynex.NWinAnimatedButton(
     auto_size=True
 ).set('id', 'b3').set('z_order', 2).set('on_click', with_dpi)
 
-# Create check box object
+# Create check box object for clearing bg
 pynex.NAnimatedCheckBox(
     main_window,
     font24,
@@ -187,6 +199,26 @@ pynex.NAnimatedCheckBox(
     (255, 0, 0),
     auto_size_box=True
 ).set('checked', True).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_clear_bg)
+
+# Create check box object for time.monotonic
+pynex.NAnimatedCheckBox(
+    main_window,
+    font24,
+    (200, 40),
+    'time.monotonic',
+    (255, 0, 0),
+    auto_size_box=True
+).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_time_monotonic)
+
+# Create check box object for time.monotonic
+pynex.NAnimatedCheckBox(
+    main_window,
+    font24,
+    (450, 0),
+    'Vertical Sync',
+    (255, 0, 0),
+    auto_size_box=True
+).set('z_order', 3).set('border_radius', 3).set('on_check', toggle_vsync)
 
 # Create edit object
 pynex.NSimpleLineEdit(
@@ -248,10 +280,7 @@ update_info()
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)\
     .set('on_resize', update_info)
-# TODO: time.monotonic checkbox
-# TODO: vsync checkbox
-# Create FPS clock (time.time for windows, because time.monotonic is limited to 60 FPS on it (why?))
-clock = pynex.NFps(60, unlocked=True, time_function=time.time)
+clock = pynex.NFps(60, unlocked=True)
 
 while running:
     main_window.process_events(pygame.event.get())

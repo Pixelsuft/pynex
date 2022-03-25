@@ -21,6 +21,8 @@ class NFps:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
+        if name == 'time_func':
+            self.last_tick = self.time_func()
         return self
 
     def tick(self) -> bool:
