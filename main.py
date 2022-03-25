@@ -10,7 +10,8 @@ pynex.request_android_default_permissions()
 pygame.init()
 
 # Create window and main frame
-screen = pygame.display.set_mode((800, 600), pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN)
+display_flags = pygame.RESIZABLE | pygame.DOUBLEBUF | pynex.FORCE_FULL_SCREEN
+screen = pygame.display.set_mode((800, 600), display_flags)
 main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex example')
 
@@ -247,8 +248,10 @@ update_info()
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)\
     .set('on_resize', update_info)
+# TODO: time.monotonic checkbox
+# TODO: vsync checkbox
 # Create FPS clock (time.time for windows, because time.monotonic is limited to 60 FPS on it (why?))
-clock = pynex.NFps(60, unlocked=True, time_function=time.time if pynex.is_windows else time.monotonic)
+clock = pynex.NFps(60, unlocked=True, time_function=time.time)
 
 while running:
     main_window.process_events(pygame.event.get())
