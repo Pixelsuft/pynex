@@ -29,11 +29,6 @@ pygame.display.set_icon(python_image)
 running = True
 clear_bg = True
 need_id = 0
-template = '''DPI: %dpi%
-RES: %res%
-SCROLL: %scroll%
-SPEED HACK VALUE: %s1%
-IMAGE VALUE: %s2%'''
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image)
 image_rot_right = bool(random.randint(0, 1))
@@ -59,7 +54,7 @@ info_label = pynex.NLabel(
     main_window,
     font24,
     (0, 150),
-    template,
+    '',
     (255, 0, 0)
 ).set('id', 'l2').set('z_order', 1).set('is_enabled', False)
 
@@ -69,10 +64,13 @@ fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
 
 
 def update_info(*args):
-    info_label.set('text', template.replace('%dpi%', str(dpi)).replace('%res%', str(screen.get_size()))\
-                   .replace('%scroll%', str((main_window.scroll_x, main_window.scroll_y)))\
-                   .replace('%s1%', str(round(main_window.find_by_id('s1').value * 100) / 100))\
-                   .replace('%s2%', str(round(main_window.find_by_id('s2').value))))
+    res = screen.get_size()
+    res_gcd = math.gcd(res[0], res[1])
+    info_label.set('text', f'''DPI: {dpi}
+RES: {res[0]}x{res[1]} ({round(res[0] / res_gcd)}:{round(res[1] / res_gcd)})
+SCROLL: {(main_window.scroll_x, main_window.scroll_y)}
+SPEED HACK VALUE: {round(main_window.find_by_id('s1').value * 100) / 100}
+IMAGE VALUE: {round(main_window.find_by_id('s2').value)}''')
 
 
 def toggle_clear_bg(current_state):
@@ -90,6 +88,7 @@ def toggle_vsync(current_state):
         display_flags | (pygame.SCALED if current_state else 0),  # From pygame
         vsync=int(current_state)
     )
+    update_info()
 
 
 def change_button_text_pos(pos):
@@ -246,7 +245,7 @@ pynex.NHorizontalSlider(
 # Create slider object for changing image
 image_changer = pynex.NVerticalSlider(
     main_window,
-    (600, 400),
+    (700, 150),
     value=0,
     min_value=0,
     max_value=len(images_to_set) - 1

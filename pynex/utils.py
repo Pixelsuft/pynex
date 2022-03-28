@@ -56,10 +56,13 @@ def get_dpi() -> int:
     if is_windows and is_winapi:
         hdc = win32gui.GetDC(0)
         result = max(
-            win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSX), win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSY)
+            win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSX),
+            win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSY)
         )
         return result
-    return 0
+    if is_android:
+        return 240
+    return 96
 
 
 def p(*path) -> str:

@@ -23,6 +23,7 @@ class NSimpleColorFade:
         ]
         self.color = round_tuple(self.current_color)
         self.current_rate = 0.0
+        self.z_order = -998
         self.id = 0
         self.usable = False
         self.is_enabled = False

@@ -20,7 +20,7 @@ class NTimer:
         self.first_tick = first_tick
         self.usable = False
         self.is_enabled = False
-        self.z_order = 0
+        self.z_order = -999
         self.id = 0
         self.current_rate = 0.0
         if auto_start:
