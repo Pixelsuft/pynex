@@ -28,11 +28,9 @@ pygame.display.set_icon(python_image)
 # Vars
 running = True
 clear_bg = True
-need_id = 0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image)
 image_rot_right = bool(random.randint(0, 1))
-image_rotation = 0
 
 # Create label object with events
 pynex.NLabel(
@@ -146,6 +144,11 @@ def choose_speed_hack(val):
     update_info()
 
 
+def update_image(val):
+    img.set('image', images_to_set[round(val)])
+    update_info()
+
+
 # Create image object
 img = pynex.NImage(
     main_window,
@@ -248,7 +251,7 @@ image_changer = pynex.NVerticalSlider(
     value=0,
     min_value=0,
     max_value=len(images_to_set) - 1
-).set('z_order', 5).set('id', 's2').set('on_change', update_info).set('page_step', 1)
+).set('z_order', 5).set('id', 's2').set('on_change', update_image).set('page_step', 1)
 
 # Create bar object for SIN
 sin_bar = pynex.NProgressBar(
@@ -295,18 +298,7 @@ while running:
         )
     if clear_bg:
         screen.fill(color_fade.color)
-    if image_rot_right:
-        image_rotation -= 50 * clock.delta * clock.speed_hack
-        while image_rotation <= 0:
-            image_rotation += 360
-    else:
-        image_rotation += 50 * clock.delta * clock.speed_hack
-        while image_rotation >= 360:
-            image_rotation -= 360
-    img.set(
-        'image',
-        pygame.transform.rotate(images_to_set[round(image_changer.value)], round(image_rotation))
-    )
+    img.set('rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack))
     sin_bar.set('value', math.sin(clock.last_tick))
     cos_bar.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')

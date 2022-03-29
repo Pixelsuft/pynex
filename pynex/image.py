@@ -24,6 +24,7 @@ class NImage:
         self.is_focusable = True
         self.enable_scroll = True
         self.usable = True
+        self.rotation = 0
         self.surface = self.image
         self.cursor = cursors.get('DEFAULT')
         self.z_order = 0
@@ -35,16 +36,29 @@ class NImage:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
-        if name in ('stretch', 'image', 'w', 'h'):
+        if name in ('stretch', 'image', 'w', 'h', 'rotation'):
             self.redraw()
         return self
 
+    def check_rotation(self) -> None:
+        while self.rotation >= 360:
+            self.rotation -= 360
+        while self.rotation < 0:
+            self.rotation += 360
+
     def redraw(self) -> None:
+        _image = self.image
         if self.stretch:
             self._width, self._height = self.w, self.h
-            self.surface = pygame.transform.scale(self.image, (self.w, self.h))
+            if self.rotation:
+                self.check_rotation()
+                _image = pygame.transform.rotate(_image, round(self.rotation))
+            self.surface = pygame.transform.scale(_image, (self.w, self.h))
         else:
-            self.surface = self.image
+            if self.rotation:
+                self.check_rotation()
+                _image = pygame.transform.rotate(_image, round(self.rotation))
+            self.surface = _image
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
                 self.w, self.h = self._width, self._height
