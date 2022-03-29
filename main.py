@@ -20,6 +20,7 @@ font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
 font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
 font12 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 12)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
+pixelsuft_image = pygame.image.load(pynex.p('example_files', 'pixelsuft.png')).convert_alpha()
 python_image = pygame.transform.scale(
     pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha(), (500, 498)
 )
@@ -29,7 +30,7 @@ pygame.display.set_icon(python_image)
 running = True
 clear_bg = True
 dpi = pynex.get_dpi()
-images_to_set = (image, python_image)
+images_to_set = (image, python_image, pixelsuft_image)
 image_rot_right = bool(random.randint(0, 1))
 
 # Create label object with events
