@@ -19,4 +19,4 @@ from .vertical_slider import NVerticalSlider
 from .progress_bar import NProgressBar
 
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
