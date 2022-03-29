@@ -134,7 +134,7 @@ def with_dpi(pos):
         new_height = round(screen.get_height() * default_dpi / dpi)
         pygame.display.set_mode(
             (new_width, new_height),
-            pygame.RESIZABLE | pynex.FORCE_FULL_SCREEN | pynex.FORCE_SCALED
+            display_flags | pynex.FORCE_SCALED
         )
     main_window.find_by_id('b3').set('is_enabled', False)
     update_info()
