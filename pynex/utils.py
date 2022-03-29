@@ -51,8 +51,10 @@ def random_float(a: float, b: float) -> float:
 
 
 def get_dpi() -> int:
-    if is_android and is_jni:
-        return jnius.autoclass('android.util.DisplayMetrics')().getDeviceDensity()
+    if is_android:
+        if is_jni:
+            return jnius.autoclass('android.util.DisplayMetrics')().getDeviceDensity()
+        return 240
     if is_windows and is_winapi:
         hdc = win32gui.GetDC(0)
         result = max(
@@ -60,8 +62,6 @@ def get_dpi() -> int:
             win32print.GetDeviceCaps(hdc, win32con.LOGPIXELSY)
         )
         return result
-    if is_android:
-        return 240
     return 96
 
 

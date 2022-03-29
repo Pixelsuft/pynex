@@ -16,6 +16,7 @@ from .checkbox_animated import NAnimatedCheckBox
 from .simple_line_edit import NSimpleLineEdit
 from .horizontal_slider import NHorizontalSlider
 from .vertical_slider import NVerticalSlider
+from .progress_bar import NProgressBar
 
 
 __version__ = '0.0.8'

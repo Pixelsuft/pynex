@@ -84,7 +84,7 @@ def toggle_time_monotonic(current_state):
 
 def toggle_vsync(current_state):
     pygame.display.set_mode(
-        (800, 600),
+        screen.get_size(),
         display_flags | (pygame.SCALED if current_state else 0),  # From pygame
         vsync=int(current_state)
     )
@@ -123,8 +123,7 @@ def make_screenshot(pos):
         pynex.surface_to_image(screen).save('/storage/emulated/0/pynex.png', 'PNG')
         main_window.find_by_id('b2').set('text', 'Saved to pynex.png')
     except Exception as _err:
-        if _err:
-            'PyCharm Hide Warning'
+        del _err
         main_window.find_by_id('b2').set('text', 'Failed to save!')
 
 
@@ -251,18 +250,20 @@ image_changer = pynex.NVerticalSlider(
     max_value=len(images_to_set) - 1
 ).set('z_order', 5).set('id', 's2').set('on_change', update_info).set('page_step', 1)
 
-# Create slider object for SIN
-sin_slider = pynex.NHorizontalSlider(
+# Create bar object for SIN
+sin_bar = pynex.NProgressBar(
     main_window,
     (300, 350),
+    (160, 22),
     min_value=-1,
     max_value=1
 ).set('z_order', 5).set('is_enabled', False)
 
-# Create slider object for COS
-cos_slider = pynex.NHorizontalSlider(
+# Create bar object for COS
+cos_bar = pynex.NProgressBar(
     main_window,
     (300, 400),
+    (160, 22),
     min_value=-1,
     max_value=1
 ).set('z_order', 5).set('is_enabled', False)
@@ -306,8 +307,8 @@ while running:
         'image',
         pygame.transform.rotate(images_to_set[round(image_changer.value)], round(image_rotation))
     )
-    sin_slider.set('value', math.sin(clock.last_tick))
-    cos_slider.set('value', math.cos(clock.last_tick))
+    sin_bar.set('value', math.sin(clock.last_tick))
+    cos_bar.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()
