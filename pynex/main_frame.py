@@ -18,11 +18,14 @@ class NMainFrame:
             pygame.MOUSEBUTTONDOWN: 'on_global_mouse_down',
             pygame.MOUSEBUTTONUP: 'on_global_mouse_up',
             pygame.MOUSEMOTION: 'on_global_mouse_move',
-            pygame.MOUSEWHEEL: 'on_global_mouse_wheel'
+            pygame.MOUSEWHEEL: 'on_global_mouse_wheel',
+            pygame.WINDOWLEAVE: 'on_global_mouse_leave',
+            pygame.WINDOWENTER: 'on_global_mouse_enter'
         }
         self.hook_mouse = True
         self.is_focusable = True
         self.is_mouse_left_down = False
+        self.is_mouse_enter = True
         self.scroll_x, self.scroll_y = 0, 0
         if not cursors:
             compile_cursors()
@@ -38,6 +41,7 @@ class NMainFrame:
         self.export_child = self.child.export_child
         self.import_child = self.child.import_child
         self.sort_child = self.child.sort
+        self.last_cursor_pos = (0, 0)
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
@@ -145,6 +149,7 @@ class NMainFrame:
             self.on_global_mouse_up(event.pos, event.button)  # type: ignore
 
     def _on_global_mouse_move(self, event: pygame.event.Event, bind: bool) -> None:
+        self.last_cursor_pos = event.pos
         if not self.is_mouse_left_down:
             hover = self
             for child in self.child.child[::-1]:
@@ -173,6 +178,21 @@ class NMainFrame:
             self.on_global_mouse_wheel(  # type: ignore
                 (event.x, event.y), hasattr(event, 'touch') and event.touch, event.flipped
             )
+
+    def _on_global_mouse_enter(self, event: pygame.event.Event, bind: bool) -> None:
+        self.is_mouse_enter = True
+        event.pos = self.last_cursor_pos
+        if bind:
+            self.on_global_mouse_enter(event)  # type: ignore
+
+    def _on_global_mouse_leave(self, event: pygame.event.Event, bind: bool) -> None:
+        self.is_mouse_enter = False
+        event.pos = self.last_cursor_pos
+        if not self.is_mouse_left_down and not self.last_hover == self:
+            self.last_hover._on_mouse_leave(event, hasattr(self.last_hover, 'on_mouse_leave'))
+            self.last_hover = self
+        if bind:
+            self.on_global_mouse_leave(event)  # type: ignore
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
