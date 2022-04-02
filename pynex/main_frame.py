@@ -191,6 +191,7 @@ class NMainFrame:
         if not self.is_mouse_left_down and not self.last_hover == self:
             self.last_hover._on_mouse_leave(event, hasattr(self.last_hover, 'on_mouse_leave'))
             self.last_hover = self
+            self._on_mouse_leave(event, hasattr(self, 'on_mouse_enter'))
         if bind:
             self.on_global_mouse_leave(event)  # type: ignore
 
