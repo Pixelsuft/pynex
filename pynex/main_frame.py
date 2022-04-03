@@ -62,7 +62,7 @@ class NMainFrame:
         for event in events:
             func = self.processes.get(event.type)
             if not func:
-                print(event)
+                print(f'TODO: {event}')
                 continue
             getattr(self, '_' + func)(event, hasattr(self, func))
         return events
