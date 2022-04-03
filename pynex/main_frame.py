@@ -20,7 +20,18 @@ class NMainFrame:
             pygame.MOUSEMOTION: 'on_global_mouse_move',
             pygame.MOUSEWHEEL: 'on_global_mouse_wheel',
             pygame.WINDOWLEAVE: 'on_global_mouse_leave',
-            pygame.WINDOWENTER: 'on_global_mouse_enter'
+            pygame.WINDOWENTER: 'on_global_mouse_enter',
+            pygame.WINDOWCLOSE: 'on_window_close',
+            pygame.ACTIVEEVENT: 'on_active',
+            pygame.AUDIODEVICEADDED: 'on_audio_device_added',
+            pygame.AUDIODEVICEREMOVED: 'on_audio_device_removed',
+            pygame.WINDOWSHOWN: 'on_window_shown',
+            pygame.WINDOWFOCUSGAINED: 'on_window_focus_gained',
+            pygame.WINDOWFOCUSLOST: 'on_window_focus_lost',
+            pygame.TEXTEDITING: 'on_text_editing',
+            pygame.VIDEOEXPOSE: 'on_video_expose',
+            pygame.WINDOWEXPOSED: 'on_window_exposed',
+            pygame.WINDOWMOVED: 'on_window_moved'
         }
         self.hook_mouse = True
         self.is_focusable = True
@@ -51,6 +62,7 @@ class NMainFrame:
         for event in events:
             func = self.processes.get(event.type)
             if not func:
+                print(event)
                 continue
             getattr(self, '_' + func)(event, hasattr(self, func))
         return events
@@ -240,3 +252,48 @@ class NMainFrame:
     def _on_key_up(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
             self.on_key_up(event)  # type: ignore
+
+    def _on_window_close(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_close(event.window)  # type: ignore
+
+    def _on_active(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_active(event.gain, event.state)  # type: ignore
+
+    def _on_audio_device_added(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_audio_device_added(event.which, event.iscapture)  # type: ignore
+
+    def _on_audio_device_removed(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_audio_device_removed(event.which, event.iscapture)  # type: ignore
+
+    def _on_window_shown(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_shown(event.window)  # type: ignore
+
+    def _on_window_focus_gained(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_focus_gained(event.window)  # type: ignore
+
+    def _on_window_focus_lost(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_focus_lost(event.window)  # type: ignore
+
+    def _on_text_editing(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_text_editing(event.text, event.start, event.length, event.window)  # type: ignore
+
+    def _on_video_expose(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_video_expose()  # type: ignore
+
+    def _on_window_exposed(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self._on_window_exposed(event.window)  # type: ignore
+
+    def _on_window_moved(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_moved(event.x, event.y, event.window)  # type: ignore
+
