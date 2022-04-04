@@ -11,30 +11,33 @@ class NMainFrame:
         self.surface = surface
         self.w, self.h = self.surface.get_size()
         self.processes = {
-            pygame.QUIT: 'on_quit',
-            pygame.WINDOWRESIZED: 'on_resize',
+            pygame.AUDIODEVICEADDED: 'on_audio_device_added',
+            pygame.AUDIODEVICEREMOVED: 'on_audio_device_removed',
+            pygame.ACTIVEEVENT: 'on_active',
             pygame.KEYDOWN: 'on_global_key_down',
             pygame.KEYUP: 'on_global_key_up',
             pygame.MOUSEBUTTONDOWN: 'on_global_mouse_down',
             pygame.MOUSEBUTTONUP: 'on_global_mouse_up',
             pygame.MOUSEMOTION: 'on_global_mouse_move',
             pygame.MOUSEWHEEL: 'on_global_mouse_wheel',
-            pygame.WINDOWLEAVE: 'on_global_mouse_leave',
-            pygame.WINDOWENTER: 'on_global_mouse_enter',
-            pygame.WINDOWCLOSE: 'on_window_close',
-            pygame.ACTIVEEVENT: 'on_active',
-            pygame.AUDIODEVICEADDED: 'on_audio_device_added',
-            pygame.AUDIODEVICEREMOVED: 'on_audio_device_removed',
-            pygame.WINDOWSHOWN: 'on_window_shown',
-            pygame.WINDOWFOCUSGAINED: 'on_window_focus_gained',
-            pygame.WINDOWFOCUSLOST: 'on_window_focus_lost',
+            pygame.QUIT: 'on_quit',
             pygame.TEXTEDITING: 'on_text_editing',
             pygame.TEXTINPUT: 'on_text_input',
             pygame.VIDEOEXPOSE: 'on_video_expose',
             pygame.VIDEORESIZE: 'on_video_resize',
+            pygame.WINDOWCLOSE: 'on_window_close',
+            pygame.WINDOWENTER: 'on_global_mouse_enter',
             pygame.WINDOWEXPOSED: 'on_window_exposed',
+            pygame.WINDOWFOCUSGAINED: 'on_window_focus_gained',
+            pygame.WINDOWFOCUSLOST: 'on_window_focus_lost',
+            pygame.WINDOWLEAVE: 'on_global_mouse_leave',
+            pygame.WINDOWMAXIMIZED: 'on_window_maximized',
+            pygame.WINDOWMINIMIZED: 'on_window_minimized',
             pygame.WINDOWMOVED: 'on_window_moved',
-            pygame.WINDOWSIZECHANGED: 'on_window_size_changed'
+            pygame.WINDOWSIZECHANGED: 'on_window_size_changed',
+            pygame.WINDOWSHOWN: 'on_window_shown',
+            pygame.WINDOWRESIZED: 'on_resize',
+            pygame.WINDOWRESTORED: 'on_window_restored'
         }
         self.hook_mouse = True
         self.is_focusable = True
@@ -312,4 +315,16 @@ class NMainFrame:
     def _on_window_size_changed(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
             self.on_window_size_changed(event.x, event.y)  # type: ignore
+
+    def _on_window_maximized(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_maximized(event.window)  # type: ignore
+
+    def _on_window_restored(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_restored(event.window)  # type: ignore
+
+    def _on_window_minimized(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_minimized(event.window)  # type: ignore
 
