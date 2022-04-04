@@ -11,6 +11,7 @@ class NMainFrame:
         self.surface = surface
         self.w, self.h = self.surface.get_size()
         self.processes = {
+            0: 'on_unknown_event',
             pygame.AUDIODEVICEADDED: 'on_audio_device_added',
             pygame.AUDIODEVICEREMOVED: 'on_audio_device_removed',
             pygame.ACTIVEEVENT: 'on_active',
@@ -34,10 +35,13 @@ class NMainFrame:
             pygame.WINDOWMAXIMIZED: 'on_window_maximized',
             pygame.WINDOWMINIMIZED: 'on_window_minimized',
             pygame.WINDOWMOVED: 'on_window_moved',
+            pygame.WINDOWRESIZED: 'on_resize',
+            pygame.WINDOWRESTORED: 'on_window_restored',
             pygame.WINDOWSIZECHANGED: 'on_window_size_changed',
             pygame.WINDOWSHOWN: 'on_window_shown',
-            pygame.WINDOWRESIZED: 'on_resize',
-            pygame.WINDOWRESTORED: 'on_window_restored'
+            pygame.WINDOWHIDDEN: 'on_window_hidden',
+            pygame.WINDOWHITTEST: 'on_window_hit_test',
+            pygame.WINDOWTAKEFOCUS: 'on_window_take_focus'
         }
         self.hook_mouse = True
         self.is_focusable = True
@@ -67,10 +71,7 @@ class NMainFrame:
 
     def process_events(self, events: list) -> list:
         for event in events:
-            func = self.processes.get(event.type)
-            if not func:
-                print(f'TODO: {event}')
-                continue
+            func = self.processes.get(event.type) or self.processes[0]
             getattr(self, '_' + func)(event, hasattr(self, func))
         return events
 
@@ -328,3 +329,19 @@ class NMainFrame:
         if bind:
             self.on_window_minimized(event.window)  # type: ignore
 
+    def _on_window_hidden(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_hidden(event.window)  # type: ignore
+
+    def _on_window_take_focus(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_take_focus(event.window)  # type: ignore
+
+    def _on_window_hit_test(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_hit_test(event.window)  # type: ignore
+
+    def _on_unknown_event(self, event: pygame.event.Event, bind: bool) -> None:
+        print(f'TODO: [{event.type}] {event}')
+        if bind:
+            self.on_unknown_event(event)  # type: ignore
