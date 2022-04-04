@@ -41,6 +41,7 @@ class NLabel:
         self.color = color
         self.bg_color = bg_color
         self.z_order = 0
+        self.line_height = self.font.get_linesize()
         self.tag = ''
         self.id = ''
         self.set('text', text)
@@ -51,6 +52,8 @@ class NLabel:
         setattr(self, name, value)
         if name in ('text', 'color', 'anti_alias', 'mutli_line_align', 'stretch', 'auto_size'):
             self.redraw()
+        elif name == 'font':
+            self.line_height = self.font.get_linesize()
         return self
 
     def redraw(self) -> None:

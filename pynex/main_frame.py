@@ -29,9 +29,12 @@ class NMainFrame:
             pygame.WINDOWFOCUSGAINED: 'on_window_focus_gained',
             pygame.WINDOWFOCUSLOST: 'on_window_focus_lost',
             pygame.TEXTEDITING: 'on_text_editing',
+            pygame.TEXTINPUT: 'on_text_input',
             pygame.VIDEOEXPOSE: 'on_video_expose',
+            pygame.VIDEORESIZE: 'on_video_resize',
             pygame.WINDOWEXPOSED: 'on_window_exposed',
-            pygame.WINDOWMOVED: 'on_window_moved'
+            pygame.WINDOWMOVED: 'on_window_moved',
+            pygame.WINDOWSIZECHANGED: 'on_window_size_changed'
         }
         self.hook_mouse = True
         self.is_focusable = True
@@ -53,6 +56,7 @@ class NMainFrame:
         self.import_child = self.child.import_child
         self.sort_child = self.child.sort
         self.last_cursor_pos = (0, 0)
+        # TODO: scale x and y, global scale x and y
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
@@ -283,7 +287,7 @@ class NMainFrame:
 
     def _on_text_editing(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
-            self.on_text_editing(event.text, event.start, event.length, event.window)  # type: ignore
+            self.on_text_editing(event.text, event.start, event.length)  # type: ignore
 
     def _on_video_expose(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
@@ -295,5 +299,17 @@ class NMainFrame:
 
     def _on_window_moved(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
-            self.on_window_moved(event.x, event.y, event.window)  # type: ignore
+            self.on_window_moved(event.x, event.y)  # type: ignore
+
+    def _on_text_input(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_text_input(event.text)  # type: ignore
+
+    def _on_video_resize(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_video_resize(event.w, event.h)  # type: ignore
+
+    def _on_window_size_changed(self, event: pygame.event.Event, bind: bool) -> None:
+        if bind:
+            self.on_window_size_changed(event.x, event.y)  # type: ignore
 
