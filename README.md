@@ -1,7 +1,7 @@
 # [pynex](https://github.com/Pixelsuft/pynex/)
 PyGame based GUI Library
 ## Screenshots
-[![Screenshot1](https://user-images.githubusercontent.com/68371847/162563036-f5356af0-0fb1-424f-bdfa-74c9a344d0bb.png)](https://github.com/Pixelsuft/pynex)
+[![Screenshot1](https://user-images.githubusercontent.com/68371847/162572356-c4fe6ab7-d1b7-40e4-b563-53872776b5bb.png)](https://github.com/Pixelsuft/pynex)
 ## Install
 On Windows:
 ```sh
