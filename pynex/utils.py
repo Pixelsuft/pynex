@@ -46,6 +46,10 @@ def round_tuple(_tuple: any) -> tuple:
     return tuple(round(_x) for _x in _tuple)
 
 
+def round_tuples(_tuple: any) -> tuple:
+    return tuple(round_tuple(_x) for _x in _tuple)
+
+
 def random_float(a: float, b: float) -> float:
     return random.random() * (b - a) + a
 
