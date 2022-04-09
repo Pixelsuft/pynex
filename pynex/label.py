@@ -19,7 +19,7 @@ class NLabel:
     ) -> None:
         super(NLabel, self).__init__()
         self.font_size = font_size
-        self.font = font.create_size(self.font_size)
+        self.font: NChildFont = font.create_size(self.font_size)
         self.x, self.y = xy
         self.w, self.h = 0, 0
         self._width, self._height = self.w, self.h
@@ -43,7 +43,6 @@ class NLabel:
         self.color = color
         self.bg_color = bg_color
         self.z_order = 0
-        self.line_height = self.font.font.get_linesize()
         self.tag = ''
         self.id = ''
         self.set('text', text)
@@ -56,7 +55,6 @@ class NLabel:
             self.redraw()
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
-            self.line_height = self.font.font.get_linesize()
         return self
 
     def redraw(self) -> None:

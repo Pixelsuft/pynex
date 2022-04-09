@@ -17,9 +17,6 @@ pygame.display.set_caption('Pixelsuft pynex example')
 
 # Load things
 font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf'))
-font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
-font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
-font12 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 12)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 pixelsuft_image = pygame.image.load(pynex.p('example_files', 'pixelsuft.png')).convert_alpha()
 python_image = pygame.transform.scale(
@@ -163,7 +160,8 @@ img = pynex.NImage(
 # Create button object
 pynex.NWinAnimatedButton(
     main_window,
-    font24,
+    font,
+    24,
     (300, 100),
     'Hello, world!\nAgain Hello!',
     (150, 40),
@@ -175,7 +173,8 @@ pynex.NWinAnimatedButton(
 # Create button object for screenshot
 pynex.NWinAnimatedButton(
     main_window,
-    font24,
+    font,
+    24,
     (400, 240),
     'Make Screenshot!',
     (150, 40),
@@ -187,7 +186,8 @@ pynex.NWinAnimatedButton(
 # Create button object for dpi scale
 pynex.NWinAnimatedButton(
     main_window,
-    font24,
+    font,
+    24,
     (400, 300),
     'Scale by DPI! (Android)',
     (150, 40),
@@ -199,7 +199,8 @@ pynex.NWinAnimatedButton(
 # Create check box object for clearing bg
 pynex.NAnimatedCheckBox(
     main_window,
-    font24,
+    font,
+    24,
     (200, 0),
     'Fill Background',
     (255, 0, 0),
@@ -209,7 +210,8 @@ pynex.NAnimatedCheckBox(
 # Create check box object for time.monotonic
 pynex.NAnimatedCheckBox(
     main_window,
-    font24,
+    font,
+    24,
     (200, 40),
     'time.monotonic',
     (255, 0, 0),
@@ -219,7 +221,8 @@ pynex.NAnimatedCheckBox(
 # Create check box object for time.monotonic
 pynex.NAnimatedCheckBox(
     main_window,
-    font24,
+    font,
+    24,
     (450, 0),
     'Vertical Sync',
     (255, 0, 0),
@@ -229,7 +232,8 @@ pynex.NAnimatedCheckBox(
 # Create edit object
 pynex.NSimpleLineEdit(
     main_window,
-    font24,
+    font,
+    24,
     (300, 200),
     'Hello, world!',
     (0, 0, 0),

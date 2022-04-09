@@ -6,7 +6,8 @@ class NWinAnimatedButton:
     def __init__(
             self,
             parent: any,
-            font: pygame.font.Font,
+            font: NFont,
+            font_size: int,
             xy: tuple,
             text: str,
             size: tuple,
@@ -17,7 +18,8 @@ class NWinAnimatedButton:
             stretch: bool = False
     ) -> None:
         super(NWinAnimatedButton, self).__init__()
-        self.font = font
+        self.font_size = font_size
+        self.font: NChildFont = font.create_size(self.font_size)
         self.x, self.y = xy
         self.w, self.h = size
         self._width, self._height = self.w, self.h
@@ -70,6 +72,8 @@ class NWinAnimatedButton:
             self.calc_align()
         elif name in ('x_align', 'y_align'):
             self.calc_align()
+        elif name in ('font', 'font_size'):
+            self.font = self.font.create_size(self.font_size)
         return self
 
     def calc_align(self) -> None:
@@ -92,7 +96,7 @@ class NWinAnimatedButton:
 
     def redraw(self) -> None:
         if self.text.count('\n') <= 0:
-            self.surface = self.font.render(
+            self.surface = self.font.font.render(
                 self.text,
                 self.anti_alias,
                 self.color
@@ -109,7 +113,7 @@ class NWinAnimatedButton:
         surfaces = []
         heights = []
         for _text in self.text.split('\n'):
-            _surface = self.font.render(
+            _surface = self.font.font.render(
                 _text,
                 self.anti_alias,
                 self.color

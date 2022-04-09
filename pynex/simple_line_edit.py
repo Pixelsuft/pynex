@@ -6,7 +6,8 @@ class NSimpleLineEdit:
     def __init__(
             self,
             parent: any,
-            font: pygame.font.Font,
+            font: NFont,
+            font_size: int,
             xy: tuple,
             text: str = '',
             color: tuple = (0, 0, 0),
@@ -18,7 +19,8 @@ class NSimpleLineEdit:
             stretch: bool = False
     ) -> None:
         super(NSimpleLineEdit, self).__init__()
-        self.font = font
+        self.font_size = font_size
+        self.font: NChildFont = font.create_size(self.font_size)
         self.x, self.y = xy
         self.w, self.h = 0, 0
         self._width, self._height = self.w, self.h
@@ -60,12 +62,14 @@ class NSimpleLineEdit:
             self.blink_pos = len(value)
         if name in ('text', 'color', 'anti_alias', 'mutli_line_align', 'stretch', 'auto_size'):
             self.redraw(self.text)
+        elif name in ('font', 'font_size'):
+            self.font = self.font.create_size(self.font_size)
         return self
 
     def redraw(self, text: str) -> None:
         if text.count('\n') > 0:
             text = text.replace('\n', '')
-        self.surface = self.font.render(
+        self.surface = self.font.font.render(
             text[:self.blink_pos] + self.blink + text[self.blink_pos:],
             self.anti_alias,
             self.color
