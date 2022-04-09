@@ -48,20 +48,21 @@ class NProgressBar:
         pygame.draw.rect(
             surface,
             self.empty_color,
-            (self.x + scroll_x, self.y + scroll_y, self.w, self.h)
+            round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                         self.w * self.scale_x, self.h * self.scale_y))
         )
         pygame.draw.rect(
             surface,
             self.filled_color,
-            (self.x + scroll_x, self.y + scroll_y, round((self.value - self.min_value) /
-                                                         (self.max_value - self.min_value) *
-                                                         (self.w - self.border_radius * 2) +
-                                                         self.border_radius), self.h)
+            (self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+             ((self.value - self.min_value) / (self.max_value - self.min_value) * (self.w - self.border_radius * 2) +
+              self.border_radius) * self.scale_x, self.h * self.scale_y)
         )
         pygame.draw.rect(
             surface,
             self.border_color,
-            (self.x + scroll_x, self.y + scroll_y, self.w, self.h),
+            round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                         self.w * self.scale_x, self.h * self.scale_y)),
             self.border_radius
         )
 
