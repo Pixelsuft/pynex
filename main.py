@@ -16,6 +16,7 @@ main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex example')
 
 # Load things
+font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf'))
 font36 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 36)
 font24 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 24)
 font12 = pygame.font.Font(pynex.p('example_files', 'segoeuib.ttf'), 12)

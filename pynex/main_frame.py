@@ -342,6 +342,5 @@ class NMainFrame:
             self.on_window_hit_test(event.window)  # type: ignore
 
     def _on_unknown_event(self, event: pygame.event.Event, bind: bool) -> None:
-        print(f'TODO: [{event.type}] {event}')
         if bind:
             self.on_unknown_event(event)  # type: ignore
