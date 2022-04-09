@@ -25,6 +25,7 @@ class NImage:
         self.enable_scroll = True
         self.usable = True
         self.rotation = 0
+        self.auto_scale = True
         self.surface = self.image
         self.cursor = cursors.get('DEFAULT')
         self.z_order = 0

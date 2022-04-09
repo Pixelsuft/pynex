@@ -47,6 +47,7 @@ class NMainFrame:
         self.is_focusable = True
         self.is_mouse_left_down = False
         self.is_mouse_enter = True
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.scroll_x, self.scroll_y = 0, 0
         if not cursors:
             compile_cursors()
@@ -63,10 +64,17 @@ class NMainFrame:
         self.import_child = self.child.import_child
         self.sort_child = self.child.sort
         self.last_cursor_pos = (0, 0)
-        # TODO: scale x and y, global scale x and y
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
+        if name == 'scale_x':
+            for child in self.child.child:
+                if child.usable and child.auto_scale:
+                    child.set('scale_x', self.scale_x)
+        elif name == 'scale_y':
+            for child in self.child.child:
+                if child.usable and child.auto_scale:
+                    child.set('scale_y', self.scale_y)
         return self
 
     def process_events(self, events: list) -> list:

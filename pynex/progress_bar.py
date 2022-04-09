@@ -20,6 +20,7 @@ class NProgressBar:
         self.is_focusable = True
         self.enable_scroll = True
         self.usable = True
+        self.auto_scale = True
         self.value = value
         self.min_value = min_value
         self.max_value = max_value

@@ -32,6 +32,7 @@ class NHorizontalSlider:
         self.down_it = False
         self.bar_height = 4
         self.bar_top = 0
+        self.auto_scale = True
         self.lsx, self.lsy = 0, 0
         self.last_x_focus = 0
         self.bar_border_color = (214, 214, 214)

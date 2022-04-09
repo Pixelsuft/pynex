@@ -33,10 +33,12 @@ class NLabel:
         self.is_focusable = True
         self.enable_scroll = True
         self.usable = True
+        self.auto_scale = True
         self.text = text
         self.x_offset = 0
         self.y_offset = 0
         self.bg_border_radius = 0
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
         self.cursor = cursors.get('DEFAULT')
@@ -55,6 +57,9 @@ class NLabel:
             self.redraw()
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
+        elif name in ('scale_x', 'scale_y'):
+            self.font.scale(min(self.scale_x, self.scale_y))
+            self.redraw()
         return self
 
     def redraw(self) -> None:

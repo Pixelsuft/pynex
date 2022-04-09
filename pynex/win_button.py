@@ -53,6 +53,7 @@ class NWinButton:
         self.auto_size_margin_y = 5
         self.align_x_offset = 0
         self.align_y_offset = 0
+        self.auto_scale = True
         self.z_order = 0
         self.tag = ''
         self.id = ''

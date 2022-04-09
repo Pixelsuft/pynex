@@ -33,6 +33,7 @@ class NSimpleLineEdit:
         self.is_enabled = True
         self.is_focusable = True
         self.enable_scroll = True
+        self.auto_scale = True
         self.usable = True
         self.blink_symbol = '|'
         self.no_blink_symbol = ' '

@@ -157,9 +157,8 @@ def change_global_scale(multiplier):
     global_scale += multiplier * 0.1
     if global_scale < 0.1:
         global_scale = 0.1
-    update_info()
     main_window.set('scale_x', global_scale).set('scale_y', global_scale)
-    print(f'TODO: Scale To {global_scale}')
+    update_info()
 
 
 # Create image object

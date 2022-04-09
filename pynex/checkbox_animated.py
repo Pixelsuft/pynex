@@ -54,6 +54,7 @@ class NAnimatedCheckBox:
         self.box_size = 13
         self.margin = 5
         self.checked = False
+        self.auto_scale = True
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
         self.cursor = cursors.get('DEFAULT')
