@@ -27,6 +27,7 @@ except ImportError:
     is_winapi = False
 
 
+r = round
 encoding = sys.getdefaultencoding()
 is_windows = not is_android and hasattr(ctypes, 'windll')
 cur_path = os.getcwd()
@@ -95,8 +96,8 @@ def surface_to_image(surface: pygame.Surface, is_flipped: bool = False) -> Image
 
 
 def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
-    return child.w + child.x + offset_x > xy[0] >= child.x + offset_x and\
-           child.h + child.y + offset_y > xy[1] >= child.y + offset_y
+    return (child.w + child.x) * child.scale_x + offset_x > xy[0] >= child.x * child.scale_x + offset_x and \
+           (child.h + child.y) * child.scale_y + offset_y > xy[1] >= child.y * child.scale_y + offset_y
 
 
 def is_colliding_rect(rect: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:

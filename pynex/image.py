@@ -26,6 +26,7 @@ class NImage:
         self.usable = True
         self.rotation = 0
         self.auto_scale = True
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.surface = self.image
         self.cursor = cursors.get('DEFAULT')
         self.z_order = 0

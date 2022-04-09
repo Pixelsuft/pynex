@@ -38,6 +38,7 @@ class NLabel:
         self.x_offset = 0
         self.y_offset = 0
         self.bg_border_radius = 0
+        self.min_scale = 1.0
         self.scale_x, self.scale_y = 1.0, 1.0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
@@ -58,7 +59,8 @@ class NLabel:
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
         elif name in ('scale_x', 'scale_y'):
-            self.font.scale(min(self.scale_x, self.scale_y))
+            self.min_scale = min(self.scale_x, self.scale_y)
+            self.font.scale(self.min_scale)
             self.redraw()
         return self
 
@@ -71,9 +73,11 @@ class NLabel:
             )
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
-                self.w, self.h = self._width, self._height
+                self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
             elif self.stretch:
-                self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+                self.surface = pygame.transform.scale(
+                    self.surface, (r(self.w * self.scale_x), r(self.h * self.scale_y))
+                )
             return
         total_height = 0
         max_width = 0
@@ -104,9 +108,9 @@ class NLabel:
             )
             total_height += heights[_num]
         if self.auto_size:
-            self.w, self.h = self._width, self._height
+            self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
         elif self.stretch:
-            self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+            self.surface = pygame.transform.scale(self.surface, (r(self.w * self.scale_x), r(self.h * self.scale_y)))
 
     def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
         if not self.is_visible:
@@ -117,14 +121,16 @@ class NLabel:
             pygame.draw.rect(
                 surface,
                 self.bg_color,
-                (self.x + scroll_x, self.y + scroll_y, self.w, self.h),
+                round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                             self.w * self.scale_x, self.h * self.scale_y)),
                 0,
-                self.bg_border_radius
+                r(self.bg_border_radius * self.min_scale)
             )
         surface.blit(
             self.surface,
-            (self.x + self.x_offset + scroll_x, self.y + self.y_offset + scroll_y),
-            None if self.auto_size else (0, 0, self.w - 1, self.h)
+            round_tuple((self.x * self.scale_x + self.x_offset + scroll_x,
+                         self.y * self.scale_y + self.y_offset + scroll_y)),
+            None if self.auto_size else (0, 0, r((self.w - 1) * self.scale_x), r(self.h * self.scale_y))
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:

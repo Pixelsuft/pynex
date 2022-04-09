@@ -53,6 +53,7 @@ class NCheckBox:
         self.margin = 5
         self.checked = False
         self.auto_scale = True
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
         self.cursor = cursors.get('DEFAULT')

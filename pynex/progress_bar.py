@@ -21,6 +21,7 @@ class NProgressBar:
         self.enable_scroll = True
         self.usable = True
         self.auto_scale = True
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.value = value
         self.min_value = min_value
         self.max_value = max_value

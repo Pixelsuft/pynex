@@ -31,6 +31,7 @@ class NVerticalSlider:
         self.bar_focused = False
         self.down_it = False
         self.auto_scale = True
+        self.scale_x, self.scale_y = 1.0, 1.0
         self.bar_width = 4
         self.bar_top = 0
         self.lsx, self.lsy = 0, 0
