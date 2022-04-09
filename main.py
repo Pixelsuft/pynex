@@ -16,7 +16,7 @@ main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex example')
 
 # Load things
-font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf')).set('scale_slow_fix', False)
+font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf'))
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 pixelsuft_image = pygame.image.load(pynex.p('example_files', 'pixelsuft.png')).convert_alpha()
 python_image = pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha()
