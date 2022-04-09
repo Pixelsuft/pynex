@@ -6,7 +6,8 @@ class NLabel:
     def __init__(
             self,
             parent: any,
-            font: pygame.font.Font,
+            font: NFont,
+            font_size: int,
             xy: tuple,
             text: str,
             color: tuple = (0, 0, 0),
@@ -17,7 +18,8 @@ class NLabel:
             stretch: bool = False
     ) -> None:
         super(NLabel, self).__init__()
-        self.font = font
+        self.font_size = font_size
+        self.font = font.create_size(self.font_size)
         self.x, self.y = xy
         self.w, self.h = 0, 0
         self._width, self._height = self.w, self.h
@@ -41,7 +43,7 @@ class NLabel:
         self.color = color
         self.bg_color = bg_color
         self.z_order = 0
-        self.line_height = self.font.get_linesize()
+        self.line_height = self.font.font.get_linesize()
         self.tag = ''
         self.id = ''
         self.set('text', text)
@@ -52,13 +54,14 @@ class NLabel:
         setattr(self, name, value)
         if name in ('text', 'color', 'anti_alias', 'mutli_line_align', 'stretch', 'auto_size'):
             self.redraw()
-        elif name == 'font':
-            self.line_height = self.font.get_linesize()
+        elif name in ('font', 'font_size'):
+            self.font = self.font.create_size(self.font_size)
+            self.line_height = self.font.font.get_linesize()
         return self
 
     def redraw(self) -> None:
         if self.text.count('\n') <= 0:
-            self.surface = self.font.render(
+            self.surface = self.font.font.render(
                 self.text,
                 self.anti_alias,
                 self.color
@@ -74,7 +77,7 @@ class NLabel:
         surfaces = []
         heights = []
         for _text in self.text.split('\n'):
-            _surface = self.font.render(
+            _surface = self.font.font.render(
                 _text,
                 self.anti_alias,
                 self.color

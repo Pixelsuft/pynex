@@ -3,7 +3,7 @@ from .utils import *
 from .flags import *
 from .cursor_lib import *
 from .fps_clock import NFps
-from .font import NFont
+from .best_font import NFont, NChildFont
 from .child_collector import NChildCollector
 from .main_frame import NMainFrame
 from .label import NLabel

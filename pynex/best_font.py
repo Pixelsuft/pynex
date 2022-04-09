@@ -19,6 +19,9 @@ class NFont:
             setattr(self, attr, pygame.font.Font(self.fn, size))
         return getattr(self, attr)
 
+    def create_size(self, size: int) -> any:
+        return NChildFont(self, size)
+
 
 class NChildFont:
     def __init__(
@@ -30,6 +33,9 @@ class NChildFont:
         self.parent = parent
         self.original_size = self.size = size
         self.font = self.parent.require_size(self.size)
+
+    def create_size(self, size: int) -> any:
+        return self.parent.create_size(size)
 
     def scale(self, new_scale: float) -> None:
         self.size = round(self.original_size * new_scale)

@@ -37,7 +37,8 @@ image_rot_right = bool(random.randint(0, 1))
 # Create label object with events
 pynex.NLabel(
     main_window,
-    font36,
+    font,
+    36,
     (0, 50),
     'Hello, world!',
     (0, 255, 0)
@@ -52,14 +53,15 @@ pynex.NLabel(
 # Create info label
 info_label = pynex.NLabel(
     main_window,
-    font24,
+    font,
+    24,
     (0, 150),
     '',
     (255, 0, 0)
 ).set('id', 'l2').set('z_order', 1).set('is_enabled', False)
 
 # Create label object for FPS
-fps_label = pynex.NLabel(main_window, font24, (0, 0), 'FPS: 0', (0, 0, 255))\
+fps_label = pynex.NLabel(main_window, font, 24, (0, 0), 'FPS: 0', (0, 0, 255))\
     .set('z_order', 999).set('enable_scroll', False).set('is_enabled', False)
 
 
