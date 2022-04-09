@@ -27,6 +27,7 @@ pygame.display.set_icon(python_image)
 # Vars
 running = True
 clear_bg = True
+global_scale = 1.0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image, pixelsuft_image)
 image_rot_right = bool(random.randint(0, 1))
@@ -150,6 +151,13 @@ def update_image(val):
     update_info()
 
 
+def change_global_scale(multiplier):
+    global global_scale
+    global_scale += multiplier * 0.1
+    main_window.set('scale_x', global_scale).set('scale_y', global_scale)
+    print(f'TODO: Scale To {global_scale}')
+
+
 # Create image object
 img = pynex.NImage(
     main_window,
@@ -175,7 +183,7 @@ pynex.NWinAnimatedButton(
     main_window,
     font,
     24,
-    (400, 240),
+    (300, 240),
     'Make Screenshot!',
     (150, 40),
     (0, 0, 0),
@@ -188,7 +196,7 @@ pynex.NWinAnimatedButton(
     main_window,
     font,
     24,
-    (400, 300),
+    (300, 300),
     'Scale by DPI! (Android)',
     (150, 40),
     (0, 0, 0),
@@ -278,6 +286,24 @@ cos_bar = pynex.NProgressBar(
     min_value=-1,
     max_value=1
 ).set('z_order', 5).set('is_enabled', False)
+
+# Create buttons for scaling
+pynex.NWinAnimatedButton(
+    main_window,
+    font,
+    24,
+    (470, 350),
+    '+',
+    (50, 50)
+).set('z_order', 2).set('on_click', lambda pos: change_global_scale(1))
+pynex.NWinAnimatedButton(
+    main_window,
+    font,
+    24,
+    (530, 350),
+    '-',
+    (50, 50)
+).set('z_order', 2).set('on_click', lambda pos: change_global_scale(-1))
 
 # Create color fade object for background
 color_fade = pynex.NSimpleColorFade(
