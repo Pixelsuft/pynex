@@ -70,7 +70,7 @@ RES: {res[0]}x{res[1]} ({round(res[0] / res_gcd)}:{round(res[1] / res_gcd)})
 SCROLL: {(main_window.scroll_x, main_window.scroll_y)}
 SPEED HACK VALUE: {round(main_window.find_by_id('s1').value * 100) / 100}
 IMAGE VALUE: {round(main_window.find_by_id('s2').value) + 1}
-SCALE VALUE: {round(global_scale * 100) / 100}
+SCALE VALUE: {round(global_scale * 10) / 10}
 ANTI ALIASING: {anti_alias}''')
 
 
@@ -129,17 +129,12 @@ def make_screenshot(pos):
 
 
 def with_dpi(pos):
-    # TODO: replace with scale
+    global global_scale
     main_window.find_by_id('c3').set('checked', False)
     if dpi > 0:
         default_dpi = 240 if pynex.is_android else 96
-        new_width = round(screen.get_width() * default_dpi / dpi)
-        new_height = round(screen.get_height() * default_dpi / dpi)
-        pygame.display.set_mode(
-            (new_width, new_height),
-            display_flags | pynex.FORCE_SCALED
-        )
-    main_window.find_by_id('b3').set('is_enabled', False)
+        global_scale = dpi / default_dpi
+        main_window.set('scale_x', global_scale).set('scale_y', global_scale)
     update_info()
 
 
