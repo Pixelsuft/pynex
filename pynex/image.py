@@ -38,7 +38,7 @@ class NImage:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
-        if name in ('stretch', 'image', 'w', 'h', 'rotation'):
+        if name in ('stretch', 'image', 'w', 'h', 'rotation', 'scale_x', 'scale_y'):
             self.redraw()
         return self
 
@@ -55,15 +55,20 @@ class NImage:
             if self.rotation:
                 self.check_rotation()
                 _image = pygame.transform.rotate(_image, round(self.rotation))
-            self.surface = pygame.transform.scale(_image, (self.w, self.h))
+            self.surface = pygame.transform.scale(_image, round_tuple((self.w * self.scale_x, self.h * self.scale_y)))
         else:
             if self.rotation:
                 self.check_rotation()
                 _image = pygame.transform.rotate(_image, round(self.rotation))
-            self.surface = _image
-            self._width, self._height = self.surface.get_size()
+            self._width, self._height = _image.get_size()
             if self.auto_size:
                 self.w, self.h = self._width, self._height
+            if self.scale_x == self.scale_y == 1.0:
+                self.surface = _image
+            else:
+                self.surface = pygame.transform.scale(
+                    _image, round_tuple((self._width * self.scale_x, self._height * self.scale_y))
+                )
 
     def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
         if not self.is_visible:
@@ -72,8 +77,8 @@ class NImage:
             scroll_x = scroll_y = 0
         surface.blit(
             self.surface,
-            (self.x + scroll_x, self.y + scroll_y),
-            None if self.auto_size else (0, 0, self.w, self.h)
+            round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y)),
+            None if self.auto_size else (0, 0, r(self.w * self.scale_x), r(self.h * self.scale_y))
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:

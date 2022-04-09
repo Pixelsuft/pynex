@@ -19,9 +19,7 @@ pygame.display.set_caption('Pixelsuft pynex example')
 font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf'))
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 pixelsuft_image = pygame.image.load(pynex.p('example_files', 'pixelsuft.png')).convert_alpha()
-python_image = pygame.transform.scale(
-    pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha(), (500, 498)
-)
+python_image = pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha()
 pygame.display.set_icon(python_image)
 
 # Vars
@@ -129,6 +127,7 @@ def make_screenshot(pos):
 
 
 def with_dpi(pos):
+    # TODO: replace with scale
     main_window.find_by_id('c3').set('checked', False)
     if dpi > 0:
         default_dpi = 240 if pynex.is_android else 96
@@ -165,8 +164,10 @@ def change_global_scale(multiplier):
 img = pynex.NImage(
     main_window,
     images_to_set[0],
-    (0, 150)
-).set('z_order', -1).set('id', 'i1').set('hook_mouse', False)
+    (0, 150),
+    auto_size=False,
+    stretch=True
+).set('w', 350).set('h', 350).set('z_order', -1).set('id', 'i1').set('hook_mouse', False)
 
 # Create button object
 pynex.NWinAnimatedButton(
