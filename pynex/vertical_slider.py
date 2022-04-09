@@ -72,7 +72,7 @@ class NVerticalSlider:
             surface,
             self.bar_color,
             round_tuple(((self.x + self.bar_top + 1) * self.scale_x + scroll_x, (self.y + 1) * self.scale_y + scroll_y,
-                         (self.bar_width - 2) * self.scale_x, (self.h - 2) * self.scale_y))
+                         (self.bar_width - 1) * self.scale_x, (self.h - 1) * self.scale_y))
         )
         pygame.draw.rect(
             surface,

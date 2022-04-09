@@ -72,7 +72,7 @@ class NHorizontalSlider:
             surface,
             self.bar_color,
             round_tuple(((self.x + 1) * self.scale_x + scroll_x, (self.y + self.bar_top + 1) * self.scale_y + scroll_y,
-                         (self.w - 2) * self.scale_x, (self.bar_height - 2) * self.scale_y))
+                         (self.w - 1) * self.scale_x, (self.bar_height - 1) * self.scale_y))
         )
         pygame.draw.rect(
             surface,
