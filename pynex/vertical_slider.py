@@ -31,6 +31,7 @@ class NVerticalSlider:
         self.bar_focused = False
         self.down_it = False
         self.auto_scale = True
+        self.min_scale = 1.0
         self.scale_x, self.scale_y = 1.0, 1.0
         self.bar_width = 4
         self.bar_top = 0
@@ -54,6 +55,8 @@ class NVerticalSlider:
         setattr(self, name, value)
         if name in ('bar_width', ):
             self.recalc_pos()
+        elif name in ('scale_x', 'scale_y'):
+            self.min_scale = min(self.scale_x, self.scale_y)
         return self
 
     def recalc_pos(self) -> None:
@@ -67,21 +70,25 @@ class NVerticalSlider:
         self.lsx, self.lsy = scroll_x, scroll_y
         pygame.draw.rect(
             surface,
-            self.bar_border_color,
-            (self.x + self.bar_top + scroll_x, self.y + scroll_y, self.bar_width, self.h),
-            1
+            self.bar_color,
+            round_tuple(((self.x + self.bar_top + 1) * self.scale_x + scroll_x, (self.y + 1) * self.scale_y + scroll_y,
+                         (self.bar_width - 2) * self.scale_x, (self.h - 2) * self.scale_y))
         )
         pygame.draw.rect(
             surface,
-            self.bar_color,
-            (self.x + self.bar_top + scroll_x + 1, self.y + scroll_y + 1, self.bar_width - 2, self.h - 2),
+            self.bar_border_color,
+            round_tuple(((self.x + self.bar_top) * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                         self.bar_width * self.scale_x, self.h * self.scale_y)),
+            r(self.min_scale) or 1
         )
         pygame.draw.rect(
             surface,
             self.current_color,
-            (self.x + scroll_x, self.y + scroll_y + (self.h - self.slider_height - (self.value - self.min_value) /
-                                                     (self.max_value - self.min_value) * (self.h - self.slider_height)),
-             self.w, self.slider_height)
+            round_tuple((self.x * self.scale_x + scroll_x, (self.y + (self.h - self.slider_height -
+                                                                      (self.value - self.min_value) /
+                                                                      (self.max_value - self.min_value) *
+                                                                      (self.h - self.slider_height))) *
+                         self.scale_y + scroll_y, self.w * self.scale_x, self.slider_height * self.scale_y))
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
