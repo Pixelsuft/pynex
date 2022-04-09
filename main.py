@@ -16,7 +16,7 @@ main_window = pynex.NMainFrame(screen)
 pygame.display.set_caption('Pixelsuft pynex example')
 
 # Load things
-font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf'))
+font = pynex.NFont(pynex.p('example_files', 'segoeuib.ttf')).set('scale_slow_fix', True)
 image = pygame.image.load(pynex.p('example_files', 'win7_logo_transparent.png')).convert_alpha()
 pixelsuft_image = pygame.image.load(pynex.p('example_files', 'pixelsuft.png')).convert_alpha()
 python_image = pygame.image.load(pynex.p('example_files', 'python.png')).convert_alpha()
@@ -25,6 +25,7 @@ pygame.display.set_icon(python_image)
 # Vars
 running = True
 clear_bg = True
+anti_alias = True
 global_scale = 1.0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image, pixelsuft_image)
@@ -69,7 +70,8 @@ RES: {res[0]}x{res[1]} ({round(res[0] / res_gcd)}:{round(res[1] / res_gcd)})
 SCROLL: {(main_window.scroll_x, main_window.scroll_y)}
 SPEED HACK VALUE: {round(main_window.find_by_id('s1').value * 100) / 100}
 IMAGE VALUE: {round(main_window.find_by_id('s2').value) + 1}
-SCALE VALUE: {round(global_scale * 100) / 100}''')
+SCALE VALUE: {round(global_scale * 100) / 100}
+ANTI ALIASING: {anti_alias}''')
 
 
 def toggle_clear_bg(current_state):
@@ -161,6 +163,15 @@ def change_global_scale(multiplier):
     update_info()
 
 
+def toggle_anti_alias(pos):
+    global anti_alias
+    anti_alias = not anti_alias
+    for child in main_window.child.get_child():
+        if hasattr(child, 'anti_alias'):
+            child.set('anti_alias', anti_alias)
+    update_info()
+
+
 # Create image object
 img = pynex.NImage(
     main_window,
@@ -200,7 +211,7 @@ pynex.NWinAnimatedButton(
     font,
     24,
     (300, 300),
-    'Scale by DPI! (Android)',
+    'Scale by DPI!',
     (150, 40),
     (0, 0, 0),
     auto_size=True
@@ -306,6 +317,17 @@ pynex.NWinAnimatedButton(
     '-',
     (50, 50)
 ).set('z_order', 2).set('on_click', lambda pos: change_global_scale(-1))
+
+# Create Button For Anti Alias
+pynex.NWinAnimatedButton(
+    main_window,
+    font,
+    24,
+    (300, 450),
+    'Toggle AntiAliasing',
+    (150, 40),
+    auto_size=True
+).set('z_order', 2).set('on_click', toggle_anti_alias)
 
 # Create color fade object for background
 color_fade = pynex.NSimpleColorFade(
