@@ -108,8 +108,8 @@ class NHorizontalSlider:
 
     def _on_mouse_move(self, event: pygame.event.Event, bind: bool) -> None:
         if self.bar_focused:
-            x = event.pos[0] - self.x - self.lsx - self.last_x_focus
-            value = x / (self.w - self.slider_width) * (self.max_value - self.min_value) + self.min_value
+            x = event.pos[0] - self.x * self.scale_x - self.last_x_focus - self.lsx
+            value = x / (self.w - self.slider_width) / self.scale_x * (self.max_value - self.min_value) + self.min_value
             if value < self.min_value:
                 value = self.min_value
             elif value > self.max_value:
@@ -119,8 +119,9 @@ class NHorizontalSlider:
                 self.on_change(value)
         elif not self.down_it:
             if is_colliding_rect(
-                (self.x + self.lsx + ((self.value - self.min_value) / (self.max_value - self.min_value) *
-                                      (self.w - self.slider_width)), self.y + self.lsy, self.slider_width, self.h),
+                ((self.x + ((self.value - self.min_value) / (self.max_value - self.min_value) *
+                            (self.w - self.slider_width))) * self.scale_x + self.lsx,
+                 self.y * self.scale_x + self.lsy, self.slider_width * self.scale_x, self.h * self.scale_y),
                 event.pos
             ):
                 if not self.bar_hovered:
@@ -139,14 +140,14 @@ class NHorizontalSlider:
             if self.bar_hovered:
                 self.bar_focused = True
                 self.current_color = self.focus_color
-                self.last_x_focus = event.pos[0] - self.x - self.lsx - ((self.value - self.min_value) /
-                                                                        (self.max_value - self.min_value) *
-                                                                        (self.w - self.slider_width))
+                self.last_x_focus = (event.pos[0] - self.x * self.scale_x - self.lsx) - (self.value - self.min_value) /\
+                                    (self.max_value - self.min_value) * (self.w - self.slider_width) * self.scale_x
             else:
                 self.down_it = True
                 if event.pos[0] > (
-                        self.x + self.lsx + ((self.value - self.min_value) / (self.max_value - self.min_value) *
-                                             (self.w - self.slider_width)) + self.slider_width / 2
+                        (self.x + ((self.value - self.min_value) /
+                                   (self.max_value - self.min_value) * (self.w - self.slider_width)) +
+                         self.slider_width / 2) * self.scale_x + self.lsx
                 ):
                     self.value += self.page_step
                     if self.value > self.max_value:
