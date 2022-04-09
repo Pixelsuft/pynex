@@ -27,7 +27,7 @@ class NFont:
         return getattr(self, attr)
 
     def create_size(self, size: int) -> any:
-        return (NFixedChildFont if self.font_cache_scale else NChildFont)(self, size)
+        return (NFixedChildFont if self.scale_slow_fix else NChildFont)(self, size)
 
 
 class NChildFont:
