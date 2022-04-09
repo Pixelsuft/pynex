@@ -140,7 +140,7 @@ class NHorizontalSlider:
             if self.bar_hovered:
                 self.bar_focused = True
                 self.current_color = self.focus_color
-                self.last_x_focus = (event.pos[0] - self.x * self.scale_x - self.lsx) - (self.value - self.min_value) /\
+                self.last_x_focus = event.pos[0] - self.x * self.scale_x - self.lsx - (self.value - self.min_value) /\
                                     (self.max_value - self.min_value) * (self.w - self.slider_width) * self.scale_x
             else:
                 self.down_it = True
