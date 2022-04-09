@@ -58,6 +58,7 @@ class NLabel:
             self.redraw()
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
+            self.redraw()
         elif name in ('scale_x', 'scale_y'):
             self.min_scale = min(self.scale_x, self.scale_y)
             self.font.scale(self.min_scale)

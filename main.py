@@ -103,14 +103,14 @@ def on_quit():
 def on_mouse_move(pos, rel, buttons, touch):
     if not main_window.is_mouse_left_down:
         return
-    main_window.scroll_x += rel[0]
-    main_window.scroll_y += rel[1]
+    main_window.scroll_x += round(rel[0])
+    main_window.scroll_y += round(rel[1])
     update_info()
 
 
 def on_mouse_wheel(rel, touch, flipped):
-    main_window.scroll_x += rel[0] * 5
-    main_window.scroll_y += rel[1] * 5
+    main_window.scroll_x += round(rel[0] * 5)
+    main_window.scroll_y += round(rel[1] * 5)
     update_info()
 
 
@@ -154,8 +154,9 @@ def update_image(val):
 def change_global_scale(multiplier):
     global global_scale
     global_scale += multiplier * 0.1
-    if global_scale < 0.1:
-        global_scale = 0.1
+    if global_scale < 0.5:
+        global_scale = 0.5
+    global_scale = round(global_scale * 10) / 10
     main_window.set('scale_x', global_scale).set('scale_y', global_scale)
     update_info()
 
@@ -178,7 +179,6 @@ pynex.NWinAnimatedButton(
     'Hello, world!\nAgain Hello!',
     (150, 40),
     (0, 0, 0),
-    animation_time=0.2,
     auto_size=True
 ).set('id', 'b1').set('z_order', 2).set('on_click', change_button_text_pos)
 
@@ -191,7 +191,6 @@ pynex.NWinAnimatedButton(
     'Make Screenshot!',
     (150, 40),
     (0, 0, 0),
-    animation_time=0.2,
     auto_size=True
 ).set('id', 'b2').set('z_order', 2).set('on_click', make_screenshot)
 
@@ -204,7 +203,6 @@ pynex.NWinAnimatedButton(
     'Scale by DPI! (Android)',
     (150, 40),
     (0, 0, 0),
-    animation_time=0.2,
     auto_size=True
 ).set('id', 'b3').set('z_order', 2).set('on_click', with_dpi)
 

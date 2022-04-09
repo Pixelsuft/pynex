@@ -71,6 +71,7 @@ class NCheckBox:
             self.redraw()
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
+            self.redraw()
         return self
 
     def redraw(self) -> None:

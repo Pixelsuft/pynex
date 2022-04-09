@@ -56,6 +56,7 @@ class NWinAnimatedButton:
         self.align_x_offset = 0
         self.align_y_offset = 0
         self.auto_scale = True
+        self.min_scale = 1.0
         self.scale_x, self.scale_y = 1.0, 1.0
         self.z_order = 0
         self.tag = ''
@@ -76,6 +77,11 @@ class NWinAnimatedButton:
             self.calc_align()
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
+            self.redraw()
+        elif name in ('scale_x', 'scale_y'):
+            self.min_scale = min(self.scale_x, self.scale_y)
+            self.font.scale(self.min_scale)
+            self.redraw()
         return self
 
     def calc_align(self) -> None:
@@ -106,9 +112,12 @@ class NWinAnimatedButton:
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
                 self.w, self.h =\
-                    self._width + self.auto_size_margin_x * 2 + 1, self._height + self.auto_size_margin_y * 2 + 1
+                    r((self._width + self.auto_size_margin_x * 2 + 1) / self.min_scale),\
+                    r((self._height + self.auto_size_margin_y * 2 + 1) / self.min_scale)
             elif self.stretch:
-                self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+                self.surface = pygame.transform.scale(
+                    self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
+                )
             return
         total_height = 0
         max_width = 0
@@ -140,9 +149,12 @@ class NWinAnimatedButton:
             total_height += heights[_num]
         if self.auto_size:
             self.w, self.h =\
-                self._width + self.auto_size_margin_x * 2 + 1, self._height + self.auto_size_margin_y * 2 + 1
+                r((self._width + self.auto_size_margin_x * 2 + 1) / self.min_scale),\
+                r((self._height + self.auto_size_margin_y * 2 + 1) / self.min_scale)
         elif self.stretch:
-            self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+            self.surface = pygame.transform.scale(
+                self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
+            )
 
     def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
         if not self.is_visible:
@@ -154,24 +166,29 @@ class NWinAnimatedButton:
         pygame.draw.rect(
             surface,
             self.current_color1.color,
-            (self.x + self.x_offset + scroll_x, self.y + self.y_offset + scroll_y, self.w, self.h),
+            round_tuple(((self.x + self.x_offset) * self.scale_x + scroll_x,
+                         (self.y + self.y_offset) * self.scale_y + scroll_y,
+                         self.w * self.scale_x, self.h * self.scale_y)),
             0,
             self.border_radius
         )
         pygame.draw.rect(
             surface,
             self.current_color2.color,
-            (self.x + self.x_offset + scroll_x, self.y + self.y_offset + scroll_y, self.w, self.h),
+            round_tuple(((self.x + self.x_offset) * self.scale_x + scroll_x,
+                         (self.y + self.y_offset) * self.scale_y + scroll_y,
+                         self.w * self.scale_x, self.h * self.scale_y)),
             1,
             self.border_radius
         )
         surface.blit(
             self.surface,
             (
-                self.x + self.x_offset + scroll_x + 1,
-                self.y + self.y_offset + scroll_y + 1
+                r((self.x + self.x_offset + 1) * self.scale_x + scroll_x),
+                r((self.y + self.y_offset + 1) * self.scale_y + scroll_y)
             ),
-            (-self.align_x_offset, -self.align_y_offset, self.w - 2, self.h - 2)
+            round_tuple((-self.align_x_offset * self.scale_x, -self.align_y_offset * self.scale_y,
+                         (self.w - 2) * self.scale_x, (self.h - 2) * self.scale_y))
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
