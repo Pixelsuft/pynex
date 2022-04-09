@@ -70,7 +70,8 @@ def update_info(*args):
 RES: {res[0]}x{res[1]} ({round(res[0] / res_gcd)}:{round(res[1] / res_gcd)})
 SCROLL: {(main_window.scroll_x, main_window.scroll_y)}
 SPEED HACK VALUE: {round(main_window.find_by_id('s1').value * 100) / 100}
-IMAGE VALUE: {round(main_window.find_by_id('s2').value) + 1}''')
+IMAGE VALUE: {round(main_window.find_by_id('s2').value) + 1}
+SCALE VALUE: {round(global_scale * 100) / 100}''')
 
 
 def toggle_clear_bg(current_state):
@@ -154,6 +155,7 @@ def update_image(val):
 def change_global_scale(multiplier):
     global global_scale
     global_scale += multiplier * 0.1
+    update_info()
     main_window.set('scale_x', global_scale).set('scale_y', global_scale)
     print(f'TODO: Scale To {global_scale}')
 
