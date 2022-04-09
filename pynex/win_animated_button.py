@@ -178,7 +178,7 @@ class NWinAnimatedButton:
             round_tuple(((self.x + self.x_offset) * self.scale_x + scroll_x,
                          (self.y + self.y_offset) * self.scale_y + scroll_y,
                          self.w * self.scale_x, self.h * self.scale_y)),
-            1,
+            r(self.min_scale) or 1,
             self.border_radius
         )
         surface.blit(

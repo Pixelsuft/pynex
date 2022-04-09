@@ -21,6 +21,7 @@ class NProgressBar:
         self.enable_scroll = True
         self.usable = True
         self.auto_scale = True
+        self.min_scale = 1.0
         self.scale_x, self.scale_y = 1.0, 1.0
         self.value = value
         self.min_value = min_value
@@ -38,6 +39,8 @@ class NProgressBar:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
+        if name in ('scale_x', 'scale_y'):
+            self.min_scale = min(self.scale_x, self.scale_y)
         return self
 
     def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
@@ -63,7 +66,7 @@ class NProgressBar:
             self.border_color,
             round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
                          self.w * self.scale_x, self.h * self.scale_y)),
-            self.border_radius
+            r(self.border_radius * self.min_scale) or 1
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:

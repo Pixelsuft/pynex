@@ -55,6 +55,7 @@ class NAnimatedCheckBox:
         self.margin = 5
         self.checked = False
         self.auto_scale = True
+        self.min_scale = 1.0
         self.scale_x, self.scale_y = 1.0, 1.0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
@@ -74,6 +75,10 @@ class NAnimatedCheckBox:
         elif name in ('font', 'font_size'):
             self.font = self.font.create_size(self.font_size)
             self.redraw()
+        elif name in ('scale_x', 'scale_y'):
+            self.min_scale = min(self.scale_x, self.scale_y)
+            self.font.scale(self.min_scale)
+            self.redraw()
         return self
 
     def redraw(self) -> None:
@@ -85,9 +90,11 @@ class NAnimatedCheckBox:
             )
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
-                self.w, self.h = self._width, self._height
+                self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
             elif self.stretch:
-                self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+                self.surface = pygame.transform.scale(
+                    self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
+                )
             if self.auto_size_box:
                 self.box_size = self.h
             return
@@ -120,9 +127,11 @@ class NAnimatedCheckBox:
             )
             total_height += heights[_num]
         if self.auto_size:
-            self.w, self.h = self._width, self._height
+            self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
         elif self.stretch:
-            self.surface = pygame.transform.scale(self.surface, (self.w, self.h))
+            self.surface = pygame.transform.scale(
+                self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
+            )
         if self.auto_size_box:
             self.box_size = self.h
 
@@ -137,34 +146,37 @@ class NAnimatedCheckBox:
         pygame.draw.rect(
             surface,
             self.current_color1.color,
-            (self.x + scroll_x, self.y + scroll_y, self.box_size, self.box_size),
+            round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                         self.box_size * self.scale_x, self.box_size * self.scale_y)),
             0,
-            self.border_radius
+            r(self.border_radius * self.min_scale)
         )
         if self.checked:
             pygame.draw.rect(
                 surface,
                 self.current_color3.color,
-                (
-                    self.x + scroll_x + self.padding,
-                    self.y + scroll_y + self.padding,
-                    self.box_size - self.padding * 2,
-                    self.box_size - self.padding * 2
-                ),
+                round_tuple((
+                    (self.x + self.padding) * self.scale_x + scroll_x,
+                    (self.y + self.padding) * self.scale_y + scroll_y,
+                    (self.box_size - self.padding * 2) * self.scale_x,
+                    (self.box_size - self.padding * 2) * self.scale_y
+                )),
                 0,
-                self.border_radius
+                r(self.border_radius * self.min_scale)
             )
         pygame.draw.rect(
             surface,
             self.current_color2.color,
-            (self.x + scroll_x, self.y + scroll_y, self.box_size, self.box_size),
-            1,
-            self.border_radius
+            round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
+                         self.box_size * self.scale_x, self.box_size * self.scale_y)),
+            r(self.min_scale) or 1,
+            r(self.border_radius * self.min_scale)
         )
         surface.blit(
             self.surface,
-            (self.box_size + self.margin + self.x + self.x_offset + scroll_x, self.y + self.y_offset + scroll_y),
-            None if self.auto_size else (0, 0, self.w - 1, self.h)
+            round_tuple(((self.box_size + self.margin + self.x + self.x_offset) * self.scale_x + scroll_x,
+                         (self.y + self.y_offset) * self.scale_y + scroll_y)),
+            None if self.auto_size else (0, 0, r((self.w - 1) * self.scale_x), r(self.h * self.scale_y))
         )
 
     def _on_mouse_wheel(self, event: pygame.event.Event, bind: bool) -> None:
