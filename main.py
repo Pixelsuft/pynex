@@ -197,9 +197,13 @@ def toggle_sound(is_on):
         else:
             ext = fn.split('.')[-1].lower().strip()
             if ext in ('midi', 'mid'):
-                music.append(subprocess.Popen(['timidity', fn]))
+                music.append(subprocess.Popen(['timidity', fn], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+                music[-1].is_midi = True
             else:
-                music.append(subprocess.Popen(['ffplay', '-nodisp', '-autoexit', fn]))
+                music.append(subprocess.Popen(
+                    ['ffplay', '-nodisp', '-autoexit', fn], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                )
+                music[-1].is_midi = False
     else:
         for fn in music_locked:
             music_files.append(fn)
@@ -209,8 +213,9 @@ def toggle_sound(is_on):
                 sound.release()
         elif not pynex.is_windows:
             for ps in music:
-                if ps.poll() is not None:
-                    ps.kill()
+                subprocess.call(
+                    ['pkill', 'timidity' if ps.is_midi else 'ffplay'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                )
         music.clear()
 
 
@@ -425,4 +430,5 @@ while running:
     main_window.draw(clock.delta)
     pygame.display.flip()
 
+toggle_sound(False)
 pygame.quit()
