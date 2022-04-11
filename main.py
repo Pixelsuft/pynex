@@ -1,3 +1,4 @@
+import os
 import time
 import random
 import math
@@ -26,6 +27,8 @@ pygame.display.set_icon(python_image)
 running = True
 clear_bg = True
 anti_alias = True
+music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
+music = []
 global_scale = 1.0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image, pixelsuft_image)
@@ -165,6 +168,18 @@ def toggle_anti_alias(pos):
         if hasattr(child, 'anti_alias'):
             child.set('anti_alias', anti_alias)
     update_info()
+
+
+def toggle_sound(is_on):
+    if is_on:
+        if pynex.is_windows:
+            import winaudio  # type: ignore
+            music.append(winaudio.AudioPlayer(random.choice(music_files)))
+            music[-1].wait_on_close = False
+            music[-1].play()
+    else:
+        if pynex.is_windows:
+            music.clear()
 
 
 # Create image object
@@ -313,16 +328,36 @@ pynex.NWinAnimatedButton(
     (50, 50)
 ).set('z_order', 2).set('on_click', lambda pos: change_global_scale(-1))
 
-# Create Button For Anti Alias
+# Create button for Anti Alias
 pynex.NWinAnimatedButton(
     main_window,
     font,
     24,
     (300, 450),
     'Toggle AntiAliasing',
-    (150, 40),
-    auto_size=True
+    (250, 40),
+    auto_size=False
 ).set('z_order', 2).set('on_click', toggle_anti_alias)
+
+# Create buttons for Music
+pynex.NWinAnimatedButton(
+    main_window,
+    font,
+    24,
+    (300, 500),
+    'Play Random Music',
+    (250, 40),
+    auto_size=False
+).set('z_order', 2).set('on_click', lambda pos: toggle_sound(True))
+pynex.NWinAnimatedButton(
+    main_window,
+    font,
+    24,
+    (300, 550),
+    'Stop All Music',
+    (250, 40),
+    auto_size=False
+).set('z_order', 2).set('on_click', lambda pos: toggle_sound(False))
 
 # Create color fade object for background
 color_fade = pynex.NSimpleColorFade(

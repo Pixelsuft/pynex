@@ -55,6 +55,12 @@ def random_float(a: float, b: float) -> float:
     return random.random() * (b - a) + a
 
 
+def get_java_class(class_name: any, include_protected: bool = True, include_private: bool = True) -> any:
+    if not is_jni:
+        raise RuntimeError('JNI is not running!')
+    return jnius.autoclass(class_name, include_protected, include_private)
+
+
 def get_dpi() -> int:
     if is_android:
         if is_jni:
