@@ -32,6 +32,7 @@ music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p(
 music = []
 music_locked = []
 global_scale = 1.0
+win_fix_speed = 0.0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image, pixelsuft_image)
 image_rot_right = bool(random.randint(0, 1))
@@ -144,11 +145,25 @@ def with_dpi(pos):
 
 
 def choose_speed_hack(val):
+    global win_fix_speed
     clock.set('speed_hack', val)
-    if pynex.is_android:
+    if pynex.is_windows:
+        win_fix_speed = val
+    elif pynex.is_android:
         for sound in music:
             sound.setPlaybackParams(sound.getPlaybackParams().setSpeed(val))
     update_info()
+
+
+def win_music_fixed_speed_hack(pos):
+    global win_fix_speed
+    if win_fix_speed <= 0:
+        return
+    for sound in music:
+        try:
+            sound.set_speed(win_fix_speed)
+        except Exception as _err:
+            del _err
 
 
 def update_image(val):
@@ -191,11 +206,15 @@ def toggle_sound(is_on):
                 music[-1].play()
             except winaudio.exceptions.PlayerMciError:
                 return
+            try:
+                music[-1].set_speed(main_window.find_by_id('s1').value)
+            except winaudio.exceptions.PlayerMciError:
+                return
         elif pynex.is_android:
             MediaPlayer = pynex.get_java_class('android.media.MediaPlayer')  # type: ignore
             music.append(MediaPlayer())
             music[-1].setDataSource(fn)
-            # music[-1].setPlaybackParams(music[-1].getPlaybackParams().setSpeed(main_window.find_by_id('s1').value))
+            music[-1].setPlaybackParams(music[-1].getPlaybackParams().setSpeed(main_window.find_by_id('s1').value))
             music[-1].prepare()
             music[-1].start()
         else:
@@ -322,7 +341,7 @@ pynex.NHorizontalSlider(
     min_value=0.25,
     max_value=10,
     value=1
-).set('z_order', 5).set('id', 's1').set('on_change', choose_speed_hack).set('page_step', 0.25)
+).set('z_order', 5).set('id', 's1').set('on_change', choose_speed_hack).set('page_step', 0.25).set('on_click', win_music_fixed_speed_hack)
 
 # Create slider object for changing image
 image_changer = pynex.NVerticalSlider(
