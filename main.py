@@ -29,6 +29,7 @@ clear_bg = True
 anti_alias = True
 music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
 music = []
+music_locked = []
 global_scale = 1.0
 dpi = pynex.get_dpi()
 images_to_set = (image, python_image, pixelsuft_image)
@@ -172,12 +173,24 @@ def toggle_anti_alias(pos):
 
 def toggle_sound(is_on):
     if is_on:
+        if len(music_files) <= 0:
+            return
+        fn = random.choice(music_files)
+        music_locked.append(fn)
+        music_files.remove(fn)
         if pynex.is_windows:
             import winaudio  # type: ignore
-            music.append(winaudio.AudioPlayer(random.choice(music_files)))
-            music[-1].wait_on_close = False
-            music[-1].play()
+            import winaudio.exceptions  # type: ignore
+            try:
+                music.append(winaudio.AudioPlayer(fn))
+                music[-1].wait_on_close = False
+                music[-1].play()
+            except winaudio.exceptions.PlayerMciError:
+                return
     else:
+        for fn in music_locked:
+            music_files.append(fn)
+        music_locked.clear()
         if pynex.is_windows:
             music.clear()
 
@@ -343,9 +356,9 @@ pynex.NWinAnimatedButton(
 pynex.NWinAnimatedButton(
     main_window,
     font,
-    24,
+    15,
     (300, 500),
-    'Play Random Music',
+    'Play Random Music (SYSTEM API)',
     (250, 40),
     auto_size=False
 ).set('z_order', 2).set('on_click', lambda pos: toggle_sound(True))
