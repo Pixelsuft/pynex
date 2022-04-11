@@ -63,9 +63,10 @@ def get_java_class(class_name: any, include_protected: bool = True, include_priv
 
 def get_dpi() -> int:
     if is_android:
-        if is_jni:
-            return jnius.autoclass('android.util.DisplayMetrics')().getDeviceDensity()
-        return 240
+        try:
+            return get_java_class('android.util.DisplayMetrics')().getDeviceDensity()
+        except RuntimeError:
+            return 240
     if is_windows and is_winapi:
         hdc = win32gui.GetDC(0)
         result = max(

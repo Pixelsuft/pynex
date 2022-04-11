@@ -187,12 +187,20 @@ def toggle_sound(is_on):
                 music[-1].play()
             except winaudio.exceptions.PlayerMciError:
                 return
+        elif pynex.is_android:
+            MediaPlayer = pynex.get_java_class('android.media.MediaPlayer')  # type: ignore
+            music.append(MediaPlayer())
+            music[-1].setDataSource(fn)
+            music[-1].prepare()
+            music[-1].start()
     else:
         for fn in music_locked:
             music_files.append(fn)
         music_locked.clear()
-        if pynex.is_windows:
-            music.clear()
+        if pynex.is_android:
+            for sound in music:
+                sound.release()
+        music.clear()
 
 
 # Create image object
