@@ -28,7 +28,10 @@ pygame.display.set_icon(python_image)
 running = True
 clear_bg = True
 anti_alias = True
-music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
+music_files = [
+    pynex.p('example_files', x) for x in os.listdir(pynex.p('example_files'))
+    if x.split('.')[-1].lower().strip() in ('mid', 'midi', 'mp3', 'wav', 'ogg')
+]
 music = []
 music_locked = []
 global_scale = 1.0
@@ -145,6 +148,9 @@ def with_dpi(pos):
 
 def choose_speed_hack(val):
     clock.set('speed_hack', val)
+    if pynex.is_android:
+        for sound in music:
+            sound.setPlaybackParams(sound.getPlaybackParams().setSpeed(val))
     update_info()
 
 
@@ -192,6 +198,7 @@ def toggle_sound(is_on):
             MediaPlayer = pynex.get_java_class('android.media.MediaPlayer')  # type: ignore
             music.append(MediaPlayer())
             music[-1].setDataSource(fn)
+            # music[-1].setPlaybackParams(music[-1].getPlaybackParams().setSpeed(main_window.find_by_id('s1').value))
             music[-1].prepare()
             music[-1].start()
         else:
