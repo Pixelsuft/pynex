@@ -2,6 +2,7 @@ import os
 import time
 import random
 import math
+import subprocess
 import pynex
 import pygame
 
@@ -193,6 +194,12 @@ def toggle_sound(is_on):
             music[-1].setDataSource(fn)
             music[-1].prepare()
             music[-1].start()
+        else:
+            ext = fn.split('.')[-1].lower().strip()
+            if ext in ('midi', 'mid'):
+                music.append(subprocess.Popen(['timidity', fn]))
+            else:
+                music.append(subprocess.Popen(['ffplay', '-nodisp', '-autoexit', fn]))
     else:
         for fn in music_locked:
             music_files.append(fn)
@@ -200,6 +207,10 @@ def toggle_sound(is_on):
         if pynex.is_android:
             for sound in music:
                 sound.release()
+        elif not pynex.is_windows:
+            for ps in music:
+                if ps.poll() is not None:
+                    ps.kill()
         music.clear()
 
 
