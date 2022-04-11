@@ -28,10 +28,7 @@ pygame.display.set_icon(python_image)
 running = True
 clear_bg = True
 anti_alias = True
-music_files = [
-    pynex.p('example_files', x) for x in os.listdir(pynex.p('example_files'))
-    if x.split('.')[-1].lower().strip() in ('mid', 'midi', 'mp3', 'wav', 'ogg')
-]
+music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
 music = []
 music_locked = []
 global_scale = 1.0
