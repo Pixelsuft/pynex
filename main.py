@@ -164,6 +164,7 @@ def win_music_fixed_speed_hack(pos):
             sound.set_speed(win_fix_speed)
         except Exception as _err:
             del _err
+    win_fix_speed = 0.0
 
 
 def update_image(val):
