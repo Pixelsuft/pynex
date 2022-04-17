@@ -27,6 +27,7 @@ pygame.display.set_icon(python_image)
 # Vars
 running = True
 anti_alias = True
+img_center = (175, 175 + 170)
 music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
 music = []
 music_locked = []
@@ -269,6 +270,7 @@ img = pynex.NImage(
     stretch=True
 ).set('w', 350).set('h', 350).set('z_order', -1).set('id', 'i1').set('hook_mouse', False)
 
+
 # Create button object
 pynex.NWinAnimatedButton(
     main_window,
@@ -462,7 +464,12 @@ while running:
     main_window.process_events(pygame.event.get())
     if not clock.tick():
         continue
-    img.set('rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack))
+    img.set(
+        'rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack)
+    ).set('alpha', max(255 + 50 * main_window.scale_x - math.dist(
+        (main_window.last_cursor_pos[0] - main_window.scroll_x, main_window.last_cursor_pos[1] - main_window.scroll_y),
+        img_center
+    ), 20))
     sin_bar.set('value', math.sin(clock.last_tick))
     cos_bar.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
