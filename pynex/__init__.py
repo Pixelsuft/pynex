@@ -21,4 +21,4 @@ from .progress_bar import NProgressBar
 from .custom_object import NObject
 
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
