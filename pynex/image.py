@@ -26,6 +26,7 @@ class NImage:
         self.usable = True
         self.rotation = 0
         self.auto_scale = True
+        self.scale_func = pygame.transform.scale
         self.scale_x, self.scale_y = 1.0, 1.0
         self.surface = self.image
         self.cursor = cursors.get('DEFAULT')
@@ -55,7 +56,7 @@ class NImage:
             if self.rotation:
                 self.check_rotation()
                 _image = pygame.transform.rotate(_image, round(self.rotation))
-            self.surface = pygame.transform.scale(_image, round_tuple((self.w * self.scale_x, self.h * self.scale_y)))
+            self.surface = self.scale_func(_image, round_tuple((self.w * self.scale_x, self.h * self.scale_y)))
         else:
             if self.rotation:
                 self.check_rotation()
@@ -66,7 +67,7 @@ class NImage:
             if self.scale_x == self.scale_y == 1.0:
                 self.surface = _image
             else:
-                self.surface = pygame.transform.scale(
+                self.surface = self.scale_func(
                     _image, round_tuple((self._width * self.scale_x, self._height * self.scale_y))
                 )
 
