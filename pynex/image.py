@@ -25,6 +25,7 @@ class NImage:
         self.enable_scroll = True
         self.usable = True
         self.rotation = 0
+        self.alpha = 255
         self.auto_scale = True
         self.scale_func = pygame.transform.scale
         self.scale_x, self.scale_y = 1.0, 1.0
@@ -41,6 +42,8 @@ class NImage:
         setattr(self, name, value)
         if name in ('stretch', 'image', 'w', 'h', 'rotation', 'scale_x', 'scale_y'):
             self.redraw()
+        elif name == 'alpha':
+            self.image.set_alpha(value)
         return self
 
     def check_rotation(self) -> None:
@@ -70,6 +73,8 @@ class NImage:
                 self.surface = self.scale_func(
                     _image, round_tuple((self._width * self.scale_x, self._height * self.scale_y))
                 )
+        if self.alpha < 255:
+            self.image.set_alpha(self.alpha)
 
     def draw(self, surface: pygame.Surface, delta: float, scroll_x: int, scroll_y: int) -> None:
         if not self.is_visible:
