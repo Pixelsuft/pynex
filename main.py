@@ -26,7 +26,6 @@ pygame.display.set_icon(python_image)
 
 # Vars
 running = True
-clear_bg = True
 anti_alias = True
 music_files = [pynex.p('example_files', 'music', x) for x in os.listdir(pynex.p('example_files', 'music'))]
 music = []
@@ -81,8 +80,7 @@ ANTI ALIASING: {anti_alias}''')
 
 
 def toggle_clear_bg(current_state):
-    global clear_bg
-    clear_bg = current_state
+    bg_cleaner.set('is_visible', current_state)
 
 
 def toggle_time_monotonic(current_state):
@@ -106,6 +104,11 @@ def change_button_text_pos(pos):
 def on_quit():
     global running
     running = False
+
+
+def on_resize(w, h):
+    bg_cleaner.set('w', w).set('h', h)
+    update_info()
 
 
 def on_mouse_move(pos, rel, buttons, touch):
@@ -189,6 +192,19 @@ def toggle_anti_alias(pos):
         if hasattr(child, 'anti_alias'):
             child.set('anti_alias', anti_alias)
     update_info()
+
+
+def bg_draw(surface, delta, scroll_x, scroll_y):
+    if not bg_cleaner.is_visible:
+        return
+    bg_cleaner.color_fade.draw(surface, delta, scroll_x, scroll_y)
+    if not bg_cleaner.color_fade.is_enabled:
+        bg_cleaner.color_fade.create(
+            time=random.randint(3, 10),
+            from_color=bg_cleaner.color_fade.color,
+            to_color=pynex.random_color()
+        )
+    surface.fill(bg_cleaner.color_fade.color)
 
 
 def toggle_sound(is_on):
@@ -421,9 +437,15 @@ pynex.NWinAnimatedButton(
     auto_size=False
 ).set('z_order', 2).set('on_click', lambda pos: toggle_sound(False))
 
-# Create color fade object for background
-color_fade = pynex.NSimpleColorFade(
+# Create object for filling bg
+bg_cleaner = pynex.NObject(
     main_window,
+    (0, 0),
+    (main_window.w, main_window.h)
+).set('z_order', -999).set('usable', False).set('draw', bg_draw).set('enable_scroll', 0)
+# Create color fade object for background
+bg_cleaner.color_fade = pynex.NSimpleColorFade(
+    None,
     time=3,
     from_color=pynex.random_color(),
     to_color=(240, 240, 240)
@@ -433,27 +455,20 @@ update_info()
 # Sort child by Z order
 main_window.sort_child()
 main_window.set('on_quit', on_quit).set('on_mouse_move', on_mouse_move).set('on_mouse_wheel', on_mouse_wheel)\
-    .set('on_resize', update_info)
+    .set('on_resize', on_resize)
 clock = pynex.NFps(60, unlocked=True)
 
 while running:
     main_window.process_events(pygame.event.get())
     if not clock.tick():
         continue
-    if not color_fade.is_enabled:
-        color_fade.create(
-            time=random.randint(3, 10),
-            from_color=color_fade.color,
-            to_color=pynex.random_color()
-        )
-    if clear_bg:
-        screen.fill(color_fade.color)
     img.set('rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack))
     sin_bar.set('value', math.sin(clock.last_tick))
     cos_bar.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')
     main_window.draw(clock.delta)
     pygame.display.flip()
+    # pynex.surface_to_image(screen).show(); running = False
 
 toggle_sound(False)
 pygame.quit()
