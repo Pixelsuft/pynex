@@ -464,12 +464,13 @@ while running:
     main_window.process_events(pygame.event.get())
     if not clock.tick():
         continue
-    img.set(
-        'rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack)
-    ).set('alpha', max(255 + 50 * main_window.scale_x - math.dist(
-        (main_window.last_cursor_pos[0] - main_window.scroll_x, main_window.last_cursor_pos[1] - main_window.scroll_y),
-        img_center
-    ), 20))
+    img.set('rotation', img.rotation + 50 * clock.delta * (-clock.speed_hack if image_rot_right else clock.speed_hack))
+    if not pynex.is_android:
+        img.set('alpha', max(255 + 50 * main_window.scale_x - math.dist(
+            (main_window.last_cursor_pos[0] - main_window.scroll_x,
+             main_window.last_cursor_pos[1] - main_window.scroll_y),
+            img_center
+        ), 20))
     sin_bar.set('value', math.sin(clock.last_tick))
     cos_bar.set('value', math.cos(clock.last_tick))
     fps_label.set('text', f'FPS: {clock.get_fps_int()}')

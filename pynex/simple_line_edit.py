@@ -49,7 +49,7 @@ class NSimpleLineEdit:
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
         self.timer = NTimer(None, self.blink_time, auto_start=False).set('on_tick', self.on_blink_tick)
-        self.cursor = cursors.get('DEFAULT')
+        self.cursor = get_system_cursor('IBEAM')
         self.color = color
         self.bg_color = bg_color
         self.z_order = 0

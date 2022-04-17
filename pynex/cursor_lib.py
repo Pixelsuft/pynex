@@ -27,3 +27,7 @@ def compile_cursors() -> None:
         '        ',
         '        ',
     )))
+
+
+def get_system_cursor(cursor_name: str) -> pygame.Cursor:
+    return system_cursors.get(cursor_name) or cursors.get('default')
