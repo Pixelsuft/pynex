@@ -41,6 +41,8 @@ class NWinAnimatedButton:
         self.color = color
         self.color1 = (225, 225, 225)
         self.color2 = (173, 173, 173)
+        self.disabled_color1 = (191, 191, 191)
+        self.disabled_color2 = (204, 204, 204)
         self.hover_color1 = (229, 241, 251)
         self.hover_color2 = (0, 120, 215)
         self.focus_color1 = (204, 228, 247)
@@ -82,6 +84,13 @@ class NWinAnimatedButton:
             self.min_scale = min(self.scale_x, self.scale_y)
             self.font.scale(self.min_scale)
             self.redraw()
+        elif name == 'is_enabled':
+            if value:
+                self.current_color1.create(self.current_color1.color, self.color1, self.animation_time)
+                self.current_color2.create(self.current_color2.color, self.color2, self.animation_time)
+            else:
+                self.current_color1.create(self.current_color1.color, self.disabled_color1, self.animation_time)
+                self.current_color2.create(self.current_color2.color, self.disabled_color2, self.animation_time)
         return self
 
     def calc_align(self) -> None:
@@ -198,8 +207,9 @@ class NWinAnimatedButton:
             )
 
     def _on_mouse_leave(self, event: pygame.event.Event, bind: bool) -> None:
-        self.current_color1.create(self.current_color1.color, self.color1, self.animation_time)
-        self.current_color2.create(self.current_color2.color, self.color2, self.animation_time)
+        if self.is_enabled:
+            self.current_color1.create(self.current_color1.color, self.color1, self.animation_time)
+            self.current_color2.create(self.current_color2.color, self.color2, self.animation_time)
         if bind:
             self.on_mouse_leave(event.pos)  # type: ignore
 
