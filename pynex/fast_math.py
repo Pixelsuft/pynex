@@ -16,8 +16,16 @@ def is_colliding_rect(rect: any, xy: tuple, offset_x: int = 0, offset_y: int = 0
            rect[3] + rect[1] + offset_y > xy[1] >= rect[1] + offset_y
 
 
+@numba.njit(fastmath=True)
+def is_colliding_s(
+        rect: any, xy: tuple, scale_x: float, scale_y: float, offset_x: int = 0, offset_y: int = 0
+) -> bool:
+    return (rect[2] + rect[0]) * scale_x + offset_x > xy[0] >= rect[0] * scale_x + offset_x and \
+           (rect[3] + rect[1]) * scale_y + offset_y > xy[1] >= rect[1] * scale_y + offset_y
+
+
 def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
-    return is_colliding_rect((child.x, child.y, child.w, child.h), xy, offset_x, offset_y)
+    return is_colliding_s((child.x, child.y, child.w, child.h), xy, child.scale_x, child.scale_y, offset_x, offset_y)
 
 
 @numba.njit(fastmath=True)
