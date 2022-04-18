@@ -33,8 +33,7 @@ class NHorizontalSlider:
         self.bar_height = 4
         self.bar_top = 0
         self.auto_scale = True
-        self.min_scale = 1.0
-        self.scale_x, self.scale_y = 1.0, 1.0
+        self.scale_x = self.scale_y = self.min_scale = self.max_scale = self.avg_scale = 1.0
         self.lsx, self.lsy = 0, 0
         self.last_x_focus = 0
         self.bar_border_color = (214, 214, 214)
@@ -53,10 +52,8 @@ class NHorizontalSlider:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
-        if name in ('bar_height', ):
+        if name == 'bar_height':
             self.recalc_pos()
-        elif name in ('scale_x', 'scale_y'):
-            self.min_scale = min(self.scale_x, self.scale_y)
         return self
 
     def recalc_pos(self) -> None:
@@ -79,7 +76,7 @@ class NHorizontalSlider:
             self.bar_border_color,
             round_tuple((self.x * self.scale_x + scroll_x, (self.y + self.bar_top) * self.scale_y + scroll_y,
                          self.w * self.scale_x, self.bar_height * self.scale_y)),
-            r(self.min_scale) or 1
+            r(self.avg_scale) or 1
         )
         pygame.draw.rect(
             surface,
