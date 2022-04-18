@@ -38,16 +38,13 @@ def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> f
 
 def calc_offset(rotation: float, diagonal: float) -> tuple:
     if rotation >= 270:  # top right
-        rotation = 360 - rotation
-        x_offset = diagonal / 90 * rotation
+        x_offset = diagonal / 90 * (360 - rotation)
         return x_offset, -math.sqrt(diagonal * diagonal - x_offset * x_offset)
     elif rotation >= 180:  # bottom right
-        rotation -= 180
-        x_offset = diagonal / 90 * rotation
+        x_offset = diagonal / 90 * (rotation - 180)
         return x_offset, math.sqrt(diagonal * diagonal - x_offset * x_offset)
     elif rotation >= 90:  # bottom left
-        rotation = rotation - 180
-        x_offset = diagonal / 90 * rotation
+        x_offset = diagonal / 90 * (rotation - 180)
         return x_offset, math.sqrt(diagonal * diagonal - x_offset * x_offset)
     else:  # top left
         x_offset = diagonal / 90 * rotation
