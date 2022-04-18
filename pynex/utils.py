@@ -1,7 +1,6 @@
 import os
 import sys
 import pygame
-import random
 import ctypes
 from PIL import Image
 try:
@@ -17,6 +16,16 @@ try:
 except Exception as _err:
     del _err
     is_jni = False
+try:
+    if os.getenv('PYNEX_NO_NUMBA'):
+        raise RuntimeError('No Numba')
+    import numba  # type: ignore
+    from .slow_math import *  # TODO: fast math
+    is_numba = True
+except Exception as _err:
+    del _err
+    from .slow_math import *
+    is_numba = False
 try:
     import win32api  # type: ignore
     import win32gui  # type: ignore
@@ -102,17 +111,7 @@ def surface_to_image(surface: pygame.Surface, is_flipped: bool = False) -> Image
     )
 
 
-def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
-    return (child.w + child.x) * child.scale_x + offset_x > xy[0] >= child.x * child.scale_x + offset_x and \
-           (child.h + child.y) * child.scale_y + offset_y > xy[1] >= child.y * child.scale_y + offset_y
-
-
-def is_colliding_rect(rect: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
-    return rect[2] + rect[0] + offset_x > xy[0] >= rect[0] + offset_x and\
-           rect[3] + rect[1] + offset_y > xy[1] >= rect[1] + offset_y
-
-
-def random_color(use_alpha: bool = False) -> tuple:
+def random_color(min_color: int = 0, max_color: int = 255, use_alpha: bool = False) -> tuple:
     return tuple(
-        random.randint(0, 255) for _x in range(4 if use_alpha else 3)
+        random.randint(min_color, max_color) for _x in range(4 if use_alpha else 3)
     )

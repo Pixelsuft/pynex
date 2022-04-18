@@ -40,29 +40,24 @@ class NImage:
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
-        if name in ('stretch', 'image', 'w', 'h', 'rotation', 'scale_x', 'scale_y'):
+        if name in ('stretch', 'image', 'w', 'h', 'scale_x', 'scale_y'):
+            self.redraw()
+        elif name == 'rotation':
+            self.rotation = normalise_rotation(value)
             self.redraw()
         elif name == 'alpha':
             self.image.set_alpha(value)
         return self
-
-    def check_rotation(self) -> None:
-        while self.rotation >= 360:
-            self.rotation -= 360
-        while self.rotation < 0:
-            self.rotation += 360
 
     def redraw(self) -> None:
         _image = self.image
         if self.stretch:
             self._width, self._height = self.w, self.h
             if self.rotation:
-                self.check_rotation()
                 _image = pygame.transform.rotate(_image, round(self.rotation))
             self.surface = self.scale_func(_image, round_tuple((self.w * self.scale_x, self.h * self.scale_y)))
         else:
             if self.rotation:
-                self.check_rotation()
                 _image = pygame.transform.rotate(_image, round(self.rotation))
             self._width, self._height = _image.get_size()
             if self.auto_size:
