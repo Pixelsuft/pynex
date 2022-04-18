@@ -1,5 +1,4 @@
 import math
-import random
 
 
 def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:

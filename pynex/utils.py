@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 import pygame
 import ctypes
 from PIL import Image
@@ -20,7 +21,8 @@ try:
     if os.getenv('PYNEX_NO_NUMBA'):
         raise RuntimeError('No Numba')
     import numba  # type: ignore
-    from .slow_math import *  # TODO: fast math
+    from .slow_math import *
+    from .fast_math import *
     is_numba = True
 except Exception as _err:
     del _err
