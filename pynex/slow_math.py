@@ -30,6 +30,6 @@ def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> f
             return 360 - 90 / diagonal * x_offset
     else:
         if y_offset >= 0:  # bottom left
-            return 180 - 90 / diagonal * -x_offset
+            return 180 + 90 / diagonal * x_offset
         else:  # top left
-            return 90 / diagonal * -x_offset
+            return -90 / diagonal * x_offset
