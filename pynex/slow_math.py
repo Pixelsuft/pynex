@@ -1,6 +1,13 @@
 import math
 
 
+def try_sqrt(number: any) -> float:
+    try:
+        return math.sqrt(number)
+    except ValueError:
+        return 0.0
+
+
 def is_colliding(child: any, xy: tuple, offset_x: int = 0, offset_y: int = 0) -> bool:
     return (child.w + child.x) * child.scale_x + offset_x > xy[0] >= child.x * child.scale_x + offset_x and \
            (child.h + child.y) * child.scale_y + offset_y > xy[1] >= child.y * child.scale_y + offset_y
@@ -37,10 +44,10 @@ def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> f
 def calc_offset(rotation: float, diagonal: float) -> tuple:
     if rotation >= 270:  # top right
         x_offset = diagonal / 90 * (360 - rotation)
-        return x_offset, -math.sqrt(diagonal * diagonal - x_offset * x_offset)
+        return x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
     elif rotation >= 90:  # bottom left + right
         x_offset = diagonal / 90 * (rotation - 180)
-        return x_offset, math.sqrt(diagonal * diagonal - x_offset * x_offset)
+        return x_offset, try_sqrt(diagonal * diagonal - x_offset * x_offset)
     else:  # top left
         x_offset = diagonal / 90 * rotation
-        return -x_offset, -math.sqrt(diagonal * diagonal - x_offset * x_offset)
+        return -x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
