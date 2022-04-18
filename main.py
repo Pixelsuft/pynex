@@ -468,7 +468,11 @@ while running:
     if not pynex.is_android:
         x_offset = main_window.last_cursor_pos[0] - main_window.scroll_x - img_center[0]
         y_offset = main_window.last_cursor_pos[1] - main_window.scroll_y - img_center[1]
-        rot = pynex.calc_rotation(x_offset, y_offset)
+        diagonal = math.hypot(x_offset, y_offset)
+        rot = pynex.calc_rotation(x_offset, y_offset, diagonal)
+        offset = pynex.calc_offset(rot, diagonal)
+        if offset:
+            print((x_offset, y_offset), offset)
         img.set('rotation', rot)
         img.set('alpha', max(255 + 50 * main_window.scale_x - math.dist(
             (main_window.last_cursor_pos[0] - main_window.scroll_x,
