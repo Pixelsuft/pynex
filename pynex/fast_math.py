@@ -41,6 +41,8 @@ def normalise_rotation(rotation: any) -> any:
 def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> float:
     if not diagonal:
         diagonal = math.sqrt(x_offset * x_offset + y_offset * y_offset)
+    if diagonal == 0:
+        return 0.0
     if x_offset >= 0:
         if y_offset >= 0:  # bottom right
             return 90 / diagonal * x_offset + 180

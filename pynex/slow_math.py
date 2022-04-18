@@ -29,6 +29,8 @@ def normalise_rotation(rotation: any) -> any:
 def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> float:
     if not diagonal:
         diagonal = math.hypot(x_offset, y_offset)
+    if diagonal == 0:
+        return 0.0
     if x_offset >= 0:
         if y_offset >= 0:  # bottom right
             return 90 / diagonal * x_offset + 180
@@ -42,12 +44,15 @@ def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> f
 
 
 def calc_offset(rotation: float, diagonal: float) -> tuple:
-    if rotation >= 270:  # top right
-        x_offset = diagonal / 90 * (360 - rotation)
-        return x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
-    elif rotation >= 90:  # bottom left + right
-        x_offset = diagonal / 90 * (rotation - 180)
-        return x_offset, try_sqrt(diagonal * diagonal - x_offset * x_offset)
-    else:  # top left
-        x_offset = diagonal / 90 * rotation
-        return -x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
+    try:
+        if rotation >= 270:  # top right
+            x_offset = diagonal / 90 * (360 - rotation)
+            return x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
+        elif rotation >= 90:  # bottom left + right
+            x_offset = diagonal / 90 * (rotation - 180)
+            return x_offset, try_sqrt(diagonal * diagonal - x_offset * x_offset)
+        else:  # top left
+            x_offset = diagonal / 90 * rotation
+            return -x_offset, -try_sqrt(diagonal * diagonal - x_offset * x_offset)
+    except ZeroDivisionError:
+        return 0.0, 0.0
