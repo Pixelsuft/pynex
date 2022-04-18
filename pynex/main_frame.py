@@ -220,14 +220,12 @@ class NMainFrame:
             )
 
     def _on_global_mouse_enter(self, event: pygame.event.Event, bind: bool) -> None:
-        event.pos = self.on_mouse_process(event.pos)
         self.is_mouse_enter = True
         event.pos = self.last_cursor_pos
         if bind:
             self.on_global_mouse_enter(event)  # type: ignore
 
     def _on_global_mouse_leave(self, event: pygame.event.Event, bind: bool) -> None:
-        event.pos = self.on_mouse_process(event.pos)
         self.is_mouse_enter = False
         event.pos = self.last_cursor_pos
         if not self.is_mouse_left_down and not self.last_hover == self:
