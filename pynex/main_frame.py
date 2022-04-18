@@ -70,10 +70,16 @@ class NMainFrame:
         if name == 'scale_x':
             for child in self.child.child:
                 if child.usable and child.auto_scale:
+                    child.set('min_scale', min(self.scale_x, child.scale_y))
+                    child.set('max_scale', max(self.scale_x, child.scale_y))
+                    child.set('avg_scale', (self.scale_x + child.scale_y) / 2)
                     child.set('scale_x', self.scale_x)
         elif name == 'scale_y':
             for child in self.child.child:
                 if child.usable and child.auto_scale:
+                    child.set('min_scale', min(child.scale_x, self.scale_y))
+                    child.set('max_scale', max(child.scale_x, self.scale_y))
+                    child.set('avg_scale', (child.scale_x + self.scale_y) / 2)
                     child.set('scale_y', self.scale_y)
         return self
 

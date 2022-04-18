@@ -53,8 +53,7 @@ class NCheckBox:
         self.margin = 5
         self.checked = False
         self.auto_scale = True
-        self.min_scale = 1.0
-        self.scale_x, self.scale_y = 1.0, 1.0
+        self.scale_x = self.scale_y = self.min_scale = self.max_scale = self.avg_scale = 1.0
         self.multi_lines_align = LABEL_ALIGN_LEFT
         self.surface: pygame.Surface = None  # type: ignore
         self.cursor = cursors.get('DEFAULT')
@@ -74,8 +73,7 @@ class NCheckBox:
             self.font = self.font.create_size(self.font_size)
             self.redraw()
         elif name in ('scale_x', 'scale_y'):
-            self.min_scale = min(self.scale_x, self.scale_y)
-            self.font.scale(self.min_scale)
+            self.font.scale(self.avg_scale)
             self.redraw()
         return self
 
@@ -88,7 +86,7 @@ class NCheckBox:
             )
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
-                self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
+                self.w, self.h = r(self._width / self.avg_scale), r(self._height / self.avg_scale)
             elif self.stretch:
                 self.surface = pygame.transform.scale(
                     self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
@@ -125,7 +123,7 @@ class NCheckBox:
             )
             total_height += heights[_num]
         if self.auto_size:
-            self.w, self.h = r(self._width / self.min_scale), r(self._height / self.min_scale)
+            self.w, self.h = r(self._width / self.avg_scale), r(self._height / self.avg_scale)
         elif self.stretch:
             self.surface = pygame.transform.scale(
                 self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
@@ -144,7 +142,7 @@ class NCheckBox:
             round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
                          self.box_size * self.scale_x, self.box_size * self.scale_y)),
             0,
-            r(self.border_radius * self.min_scale)
+            r(self.border_radius * self.avg_scale)
         )
         if self.checked:
             pygame.draw.rect(
@@ -157,15 +155,15 @@ class NCheckBox:
                     (self.box_size - self.padding * 2) * self.scale_y
                 )),
                 0,
-                r(self.border_radius * self.min_scale)
+                r(self.border_radius * self.avg_scale)
             )
         pygame.draw.rect(
             surface,
             self.current_color2,
             round_tuple((self.x * self.scale_x + scroll_x, self.y * self.scale_y + scroll_y,
                          self.box_size * self.scale_x, self.box_size * self.scale_y)),
-            r(self.min_scale) or 1,
-            r(self.border_radius * self.min_scale)
+            r(self.avg_scale) or 1,
+            r(self.border_radius * self.avg_scale)
         )
         surface.blit(
             self.surface,

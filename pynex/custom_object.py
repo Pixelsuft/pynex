@@ -18,7 +18,7 @@ class NObject:
         self.enable_scroll = True
         self.usable = True
         self.auto_scale = True
-        self.scale_x, self.scale_y = 1.0, 1.0
+        self.scale_x = self.scale_y = self.min_scale = self.max_scale = self.avg_scale = 1.0
         self.cursor = cursors.get('DEFAULT')
         self.z_order = 0
         self.tag = ''

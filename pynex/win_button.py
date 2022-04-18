@@ -56,8 +56,7 @@ class NWinButton:
         self.align_x_offset = 0
         self.align_y_offset = 0
         self.auto_scale = True
-        self.min_scale = 1.0
-        self.scale_x, self.scale_y = 1.0, 1.0
+        self.scale_x = self.scale_y = self.min_scale = self.max_scale = self.avg_scale = 1.0
         self.z_order = 0
         self.tag = ''
         self.id = ''
@@ -79,8 +78,7 @@ class NWinButton:
             self.font = self.font.create_size(self.font_size)
             self.redraw()
         elif name in ('scale_x', 'scale_y'):
-            self.min_scale = min(self.scale_x, self.scale_y)
-            self.font.scale(self.min_scale)
+            self.font.scale(self.avg_scale)
             self.redraw()
         elif name == 'is_enabled':
             if value:
@@ -119,8 +117,8 @@ class NWinButton:
             self._width, self._height = self.surface.get_size()
             if self.auto_size:
                 self.w, self.h =\
-                    r((self._width + self.auto_size_margin_x * 2 + 1) / self.min_scale),\
-                    r((self._height + self.auto_size_margin_y * 2 + 1) / self.min_scale)
+                    r((self._width + self.auto_size_margin_x * 2 + 1) / self.avg_scale),\
+                    r((self._height + self.auto_size_margin_y * 2 + 1) / self.avg_scale)
             elif self.stretch:
                 self.surface = pygame.transform.scale(
                     self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
@@ -156,8 +154,8 @@ class NWinButton:
             total_height += heights[_num]
         if self.auto_size:
             self.w, self.h =\
-                r((self._width + self.auto_size_margin_x * 2 + 1) / self.min_scale),\
-                r((self._height + self.auto_size_margin_y * 2 + 1) / self.min_scale)
+                r((self._width + self.auto_size_margin_x * 2 + 1) / self.avg_scale),\
+                r((self._height + self.auto_size_margin_y * 2 + 1) / self.avg_scale)
         elif self.stretch:
             self.surface = pygame.transform.scale(
                 self.surface, round_tuple((self.w * self.scale_x, self.h * self.scale_y))
@@ -183,7 +181,7 @@ class NWinButton:
             round_tuple(((self.x + self.x_offset) * self.scale_x + scroll_x,
                          (self.y + self.y_offset) * self.scale_y + scroll_y,
                          self.w * self.scale_x, self.h * self.scale_y)),
-            r(self.min_scale) or 1,
+            r(self.avg_scale) or 1,
             self.border_radius
         )
         surface.blit(
