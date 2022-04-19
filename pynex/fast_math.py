@@ -38,21 +38,17 @@ def normalise_rotation(rotation: any) -> any:
 
 
 @numba.njit(fastmath=True)
-def calc_rotation(x_offset: float, y_offset: float, diagonal: float = None) -> float:
-    if not diagonal:
-        diagonal = math.sqrt(x_offset * x_offset + y_offset * y_offset)
-    if diagonal == 0:
-        return 0.0
+def calc_rotation(x_offset: float, y_offset: float) -> float:
     if x_offset >= 0:
         if y_offset >= 0:  # bottom right
-            return 90 / diagonal * x_offset + 180
+            return 180 + 90 / (x_offset + y_offset) * x_offset
         else:  # top right
-            return 360 - 90 / diagonal * x_offset
+            return 360 - 90 / (x_offset - y_offset) * x_offset
     else:
         if y_offset >= 0:  # bottom left
-            return 180 + 90 / diagonal * x_offset
+            return 180 - 90 / (x_offset - y_offset) * x_offset
         else:  # top left
-            return -90 / diagonal * x_offset
+            return 90 / (x_offset + y_offset) * x_offset
 
 
 @numba.njit(fastmath=True)
