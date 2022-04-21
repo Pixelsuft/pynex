@@ -107,6 +107,9 @@ class NMainFrame:
 
     def _on_resize(self, event: pygame.event.Event, bind: bool) -> None:
         self.w, self.h = event.x, event.y
+        for child in self.child.child:
+            if hasattr(child, 'fit_to_screen') and child.fit_to_screen:
+                child.set('w', self.w).set('h', self.h)
         if bind:
             self.on_resize(event.x, event.y)  # type: ignore
 
