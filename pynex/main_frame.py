@@ -101,9 +101,6 @@ class NMainFrame:
     def on_mouse_process(self, xy: tuple) -> tuple:
         return xy
 
-    def get_scale(self) -> tuple:
-        return self.scale_x, self.scale_y
-
     def _on_quit(self, event: pygame.event.Event, bind: bool) -> None:
         if bind:
             self.on_quit()  # type: ignore
