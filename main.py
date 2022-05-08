@@ -121,8 +121,8 @@ def on_mouse_move(pos, rel, buttons, touch):
 
 
 def on_mouse_wheel(rel, touch, flipped):
-    main_window.scroll_x += round(rel[0] * 5)
-    main_window.scroll_y += round(rel[1] * 5)
+    main_window.scroll_x += round(rel[0] * 20)
+    main_window.scroll_y += round(rel[1] * 20)
     update_info()
 
 

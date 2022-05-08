@@ -78,7 +78,7 @@ class NWinButton:
             self.font = self.font.create_size(self.font_size)
             self.redraw()
         elif name in ('scale_x', 'scale_y'):
-            self.font.scale(self.avg_scale)
+            self.font.scale(self.scale_x, self.scale_y, self.avg_scale)
             self.redraw()
         elif name == 'is_enabled':
             if value:

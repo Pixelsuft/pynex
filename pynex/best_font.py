@@ -49,8 +49,9 @@ class NChildFont:
     def create_size(self, size: int) -> any:
         return self.parent.create_size(size)
 
-    def scale(self, new_scale: float) -> None:
-        self.avg_scale = self.scale_x = self.scale_y = new_scale
+    def scale(self, scale_x: float, scale_y: float, avg_scale: float) -> None:
+        self.scale_x, self.scale_y = scale_x, scale_y
+        self.avg_scale = avg_scale
         self.size = round(self.original_size * self.avg_scale)
         self.font = self.parent.require_size(self.size)
         self.line_height = self.font.get_linesize()
