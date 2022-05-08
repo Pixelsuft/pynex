@@ -269,6 +269,8 @@ def toggle_sound(is_on):
 
 
 def clear_frame():
+    if not bg_cleaner.is_visible:
+        return
     frame.surface.fill((0, 0, 0))
 
 
@@ -464,11 +466,14 @@ bg_cleaner.color_fade = pynex.NSimpleColorFade(
     to_color=(240, 240, 240)
 )
 
+# Create Frame
 frame = pynex.NFrame(
     main_window,
-    (500, 400),
+    (600, 400),
     (500, 500)
-).set('z_order', 999).set('on_global_mouse_move', on_frame_mouse_move).set('on_before_draw', clear_frame)
+).set('z_order', 999).set('on_mouse_move', on_frame_mouse_move).set(
+    'on_before_draw', clear_frame
+).set('cursor', pynex.system_cursors.get('HAND'))
 pynex.NWinAnimatedButton(
     frame,
     font,
