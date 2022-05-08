@@ -109,7 +109,7 @@ class NWinButton:
 
     def redraw(self) -> None:
         if self.text.count('\n') <= 0:
-            self.surface = self.font.font.render(
+            self.surface = self.font.render(
                 self.text,
                 self.anti_alias,
                 self.color
@@ -129,7 +129,7 @@ class NWinButton:
         surfaces = []
         heights = []
         for _text in self.text.split('\n'):
-            _surface = self.font.font.render(
+            _surface = self.font.render(
                 _text,
                 self.anti_alias,
                 self.color

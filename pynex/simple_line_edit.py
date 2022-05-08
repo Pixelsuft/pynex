@@ -75,7 +75,7 @@ class NSimpleLineEdit:
     def redraw(self, text: str) -> None:
         if text.count('\n') > 0:
             text = text.replace('\n', '')
-        self.surface = self.font.font.render(
+        self.surface = self.font.render(
             text[:self.blink_pos] + self.blink + text[self.blink_pos:],
             self.anti_alias,
             self.color

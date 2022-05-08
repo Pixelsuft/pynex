@@ -10,7 +10,6 @@ class NFont:
         super(NFont, self).__init__()
         self.fn = fn
         self.font_cache_scale = 1.0
-        self.line_scale_factor = 4 / 3
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
@@ -39,7 +38,8 @@ class NChildFont:
         super(NChildFont, self).__init__()
         self.parent = parent
         self.original_size = self.size = size
-        self.font = self.parent.require_size(self.size)
+        self.original_font = self.font = self.parent.require_size(self.size)
+        self.scale_x = self.scale_y = self.avg_scale = 1.0
         self.line_height = self.font.get_linesize()
 
     def set(self, name: str, value: any) -> any:
@@ -50,6 +50,14 @@ class NChildFont:
         return self.parent.create_size(size)
 
     def scale(self, new_scale: float) -> None:
-        self.size = round(self.original_size * new_scale)
+        self.avg_scale = self.scale_x = self.scale_y = new_scale
+        self.size = round(self.original_size * self.avg_scale)
         self.font = self.parent.require_size(self.size)
         self.line_height = self.font.get_linesize()
+
+    def render(self, text: any, anti_alias: bool, color, background: any = None) -> pygame.Surface:
+        orig_size = self.original_font.size(text)
+        return pygame.transform.scale(
+            self.font.render(text, anti_alias, color, background),
+            (orig_size[0] * self.scale_x, orig_size[1] * self.scale_y)
+        )
