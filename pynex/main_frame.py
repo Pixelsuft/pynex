@@ -83,6 +83,14 @@ class NMainFrame:
                     child.set('max_scale', max(child.scale_x, self.scale_y))
                     child.set('avg_scale', (child.scale_x + self.scale_y) / 2)
                     child.set('scale_y', self.scale_y)
+        elif name == 'scroll_x':
+            for child in self.child.child:
+                if hasattr(child, '_scroll_x'):
+                    child.set('_scroll_x', self.scroll_x)
+        elif name == 'scroll_y':
+            for child in self.child.child:
+                if hasattr(child, '_scroll_y'):
+                    child.set('_scroll_y', self.scroll_y)
         return self
 
     def process_events(self, events: list) -> list:
@@ -189,6 +197,8 @@ class NMainFrame:
                 self.last_hover = self
                 if hasattr(self.last_hover, '_on_mouse_enter'):
                     self.last_hover._on_mouse_enter(event, hasattr(self.last_hover, 'on_mouse_enter'))
+            if hasattr(self, 'on_global_click'):
+                self.on_global_click(event.pos)
         if bind:
             self.on_global_mouse_up(event.pos, event.button)  # type: ignore
 
@@ -236,7 +246,7 @@ class NMainFrame:
         if not self.is_mouse_left_down and not self.last_hover == self:
             self.last_hover._on_mouse_leave(event, hasattr(self.last_hover, 'on_mouse_leave'))
             self.last_hover = self
-            self._on_mouse_leave(event, hasattr(self, 'on_mouse_enter'))
+            self._on_mouse_leave(event, hasattr(self, 'on_mouse_leave'))
         if bind:
             self.on_global_mouse_leave(event)  # type: ignore
 

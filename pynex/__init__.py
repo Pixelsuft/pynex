@@ -19,6 +19,7 @@ from .horizontal_slider import NHorizontalSlider
 from .vertical_slider import NVerticalSlider
 from .progress_bar import NProgressBar
 from .custom_object import NObject
+from .frame import NFrame
 
 
 __version__ = '0.1.3'

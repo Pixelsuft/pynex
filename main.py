@@ -112,17 +112,24 @@ def on_resize(w, h):
     update_info()
 
 
+def on_frame_mouse_move(pos, rel, buttons, touch):
+    if not frame.is_mouse_left_down:
+        return
+    frame.set('x', frame.x + round(rel[0]))
+    frame.set('y', frame.y + round(rel[1]))
+
+
 def on_mouse_move(pos, rel, buttons, touch):
     if not main_window.is_mouse_left_down:
         return
-    main_window.scroll_x += round(rel[0])
-    main_window.scroll_y += round(rel[1])
+    main_window.set('scroll_x', main_window.scroll_x + round(rel[0]))
+    main_window.set('scroll_y', main_window.scroll_y + round(rel[1]))
     update_info()
 
 
 def on_mouse_wheel(rel, touch, flipped):
-    main_window.scroll_x += round(rel[0] * 20)
-    main_window.scroll_y += round(rel[1] * 20)
+    main_window.set('scroll_x', main_window.scroll_x + round(rel[0] * 20))
+    main_window.set('scroll_y', main_window.scroll_y + round(rel[1] * 20))
     update_info()
 
 
@@ -259,6 +266,10 @@ def toggle_sound(is_on):
                     ['pkill', 'timidity' if ps.is_midi else 'ffplay'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
                 )
         music.clear()
+
+
+def clear_frame():
+    frame.surface.fill((0, 0, 0))
 
 
 # Create image object
@@ -451,6 +462,20 @@ bg_cleaner.color_fade = pynex.NSimpleColorFade(
     time=3,
     from_color=pynex.random_color(),
     to_color=(240, 240, 240)
+)
+
+frame = pynex.NFrame(
+    main_window,
+    (500, 400),
+    (500, 500)
+).set('z_order', 999).set('on_global_mouse_move', on_frame_mouse_move).set('on_before_draw', clear_frame)
+pynex.NWinAnimatedButton(
+    frame,
+    font,
+    24,
+    (50, 50),
+    'xd',
+    (50, 50)
 )
 
 update_info()
