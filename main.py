@@ -479,7 +479,7 @@ pynex.NWinAnimatedButton(
     font,
     24,
     (50, 50),
-    'xd',
+    'test',
     (50, 50)
 )
 
