@@ -70,6 +70,13 @@ class NFrameLuna:
         self.mb = NImage(self, self.style.get('mbm'), (self.lb.w + self.mbl.w, 0), False, True).set('z_order', 1)\
             .set('on_mouse_move', self.on_mb_change).set('cursor', system_cursors.get('SIZENS'))\
             .set('h', self.style.get('mbm').get_height())
+        self.buttons = {
+            'close': True,
+            'maximize': True,
+            'restore': True,
+            'minimize': True,
+            'help': True
+        }
         self.redraw()
         if parent:
             parent.add_child(self)
@@ -120,6 +127,9 @@ class NFrameLuna:
         pass
 
     def on_move(self) -> None:
+        pass
+
+    def button_process(self, button: str, need: str) -> None:
         pass
 
     def on_lt_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:

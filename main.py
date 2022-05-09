@@ -461,14 +461,14 @@ frame = pynex.NFrameLuna(
     (200, 200),
     luna
 ).set('z_order', 999)
-pynex.NWinAnimatedButton(
+'''pynex.NWinAnimatedButton(
     frame,
     font,
     24,
     (50, 50),
     'test',
     (50, 50)
-)
+)'''
 
 update_info()
 # Sort child by Z order
