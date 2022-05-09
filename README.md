@@ -1,3 +1,5 @@
+# Abadoned
+Because of many bad code -> bad speed and many bugs
 # [pynex](https://github.com/Pixelsuft/pynex/)
 PyGame based GUI Library
 ## Screenshots
