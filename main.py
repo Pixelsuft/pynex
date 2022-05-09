@@ -467,6 +467,7 @@ bg_cleaner.color_fade = pynex.NSimpleColorFade(
 )
 
 # Create Frame
+luna = pynex.load_style_luna(os.path.join(pynex.cur_path, 'styles', 'luna'), (0, 255, 0, 255), 5)
 frame = pynex.NFrame(
     main_window,
     (600, 400),

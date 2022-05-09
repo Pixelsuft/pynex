@@ -78,6 +78,7 @@ class NFrame:
         self.on_before_draw()
         for child in self.child.child:
             child.draw(self.surface, delta, self.scroll_x, self.scroll_y)
+        self.on_after_draw()
         surface.blit(
             self.surface,
             (r(self.x * self.scale_x) + scroll_x, r(self.y * self.scale_y) + scroll_y)
@@ -85,6 +86,9 @@ class NFrame:
 
     def on_before_draw(self) -> None:
         self.surface.fill((0, 0, 0, 0))
+
+    def on_after_draw(self) -> None:
+        pass
 
     def on_mouse_process(self, xy: tuple) -> tuple:
         x, y = xy

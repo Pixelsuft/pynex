@@ -117,3 +117,19 @@ def random_color(min_color: int = 0, max_color: int = 255, use_alpha: bool = Fal
     return tuple(
         random.randint(min_color, max_color) for _x in range(4 if use_alpha else 3)
     )
+
+
+def load_style_luna(path: str, chroma_key: tuple = None, max_height: int = None) -> dict:
+    result = {}
+    for file_name in os.listdir(path):
+        file_no_ext = '.'.join(file_name.split('.')[:-1]).lower()
+        if 'preview' in file_no_ext:
+            continue
+        image = pygame.image.load(os.path.join(path, file_name)).convert_alpha()
+        if chroma_key and file_no_ext in ('lt', 'mtl', 'mtr', 'rt'):
+            for _x in range(image.get_width()):
+                for _y in range(max_height or image.get_height()):
+                    if image.get_at((_x, _y)) == chroma_key:
+                        image.set_at((_x, _y), (0, 0, 0, 0))
+        result[file_no_ext] = image
+    return result
