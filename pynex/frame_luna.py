@@ -2,14 +2,15 @@ import pygame
 from . import *
 
 
-class NFrame:
+class NFrameLuna:
     def __init__(
             self,
             parent: any,
             xy: tuple,
-            size: tuple
+            size: tuple,
+            style: dict
     ) -> None:
-        super(NFrame, self).__init__()
+        super(NFrameLuna, self).__init__()
         self.x, self.y = xy
         self.w, self.h = size
         self.surface = pygame.Surface(size, pygame.SRCALPHA, 32)
@@ -42,13 +43,41 @@ class NFrame:
         self.z_order = 0
         self.tag = ''
         self.id = ''
+        self.style = style
+        self.lt = NImage(self, self.style.get('lt'), (0, 0)).set('z_order', 1)\
+            .set('cursor', system_cursors.get('SIZENWSE')).set('on_mouse_move', self.on_lt_change)
+        self.rt = NImage(self, self.style.get('rt'), (0, 0)).set('z_order', 1)\
+            .set('cursor', system_cursors.get('SIZENESW')).set('on_mouse_move', self.on_rt_change)
+        self.lb = NImage(self, self.style.get('lb'), (0, 0)).set('z_order', 1)\
+            .set('cursor', system_cursors.get('SIZENESW')).set('on_mouse_move', self.on_lb_change)
+        self.rb = NImage(self, self.style.get('rb'), (0, 0)).set('z_order', 1)\
+            .set('cursor', system_cursors.get('SIZENWSE')).set('on_mouse_move', self.on_rb_change)
+        self.lc = NImage(self, self.style.get('lc'), (0, 0), False, True).set('w', self.style.get('lc').get_width())\
+            .set('z_order', 1).set('cursor', system_cursors.get('SIZEWE')).set('on_mouse_move', self.on_lc_change)
+        self.rc = NImage(self, self.style.get('rc'), (0, 0), False, True).set('w', self.style.get('rc').get_width())\
+            .set('z_order', 1).set('cursor', system_cursors.get('SIZEWE')).set('on_mouse_move', self.on_rc_change)
+        self.mt_move = NObject(self, (0, 0), (0, 10)).set('z_order', 2).set('cursor', system_cursors.get('SIZENS'))\
+            .set('on_mouse_move', self.on_mt_move_change)
+        self.mtl = NImage(self, self.style.get('mtl'), (self.lt.w, 0)).set('z_order', 1)\
+            .set('on_mouse_move', self.on_mt_change)
+        self.mtr = NImage(self, self.style.get('mtr'), (0, 0)).set('z_order', 1)\
+            .set('on_mouse_move', self.on_mt_change)
+        self.mt = NImage(self, self.style.get('mtm'), (0, 0), False, True).set('z_order', 1)\
+            .set('on_mouse_move', self.on_mt_change).set('x', self.lt.w + self.mtl.w)\
+            .set('h', self.style.get('mtm').get_height())
+        self.mbl = NImage(self, self.style.get('mbl'), (self.lb.w, 0)).set('z_order', 1)\
+            .set('on_mouse_move', self.on_mb_change).set('cursor', system_cursors.get('SIZENS'))
+        self.mb = NImage(self, self.style.get('mbm'), (self.lb.w + self.mbl.w, 0), False, True).set('z_order', 1)\
+            .set('on_mouse_move', self.on_mb_change).set('cursor', system_cursors.get('SIZENS'))\
+            .set('h', self.style.get('mbm').get_height())
+        self.redraw()
         if parent:
             parent.add_child(self)
 
     def set(self, name: str, value: any) -> any:
         setattr(self, name, value)
         if name in ('w', 'h'):
-            self.surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA, 32)
+            self.redraw()
         elif name == 'scale_x':
             for child in self.child.child:
                 if child.usable and child.auto_scale:
@@ -64,6 +93,108 @@ class NFrame:
                     child.set('avg_scale', (child.scale_x + self.scale_y) / 2)
                     child.set('scale_y', self.scale_y)
         return self
+
+    def redraw(self) -> None:
+        self.surface = pygame.Surface((self.w, self.h), pygame.SRCALPHA, 32)
+        self.rt.x = self.w - self.rt.w
+        self.lb.y = self.h - self.lb.h
+        self.rb.x = self.w - self.rb.w
+        self.rb.y = self.h - self.rb.h
+        self.lc.y = self.lt.h
+        self.lc.h = self.h - self.lt.h - self.lb.h
+        self.lc.redraw()
+        self.rc.x = self.w - self.rc.w
+        self.rc.y = self.rt.h
+        self.rc.h = self.h - self.rt.h - self.rb.h
+        self.rc.redraw()
+        self.mt_move.w = self.w - self.lt.w - self.rt.w
+        self.mtr.x = self.w - self.rt.w - self.mtr.w
+        self.mt.w = self.w - self.lt.w - self.mtl.w - self.mtr.w - self.rt.w
+        self.mt.redraw()
+        self.mbl.y = self.h - self.mbl.h
+        self.mb.y = self.h - self.mb.h
+        self.mb.w = self.w - self.lb.w - self.mbl.w - self.rb.w
+        self.mb.redraw()
+
+    def on_resize(self) -> None:
+        pass
+
+    def on_move(self) -> None:
+        pass
+
+    def on_lt_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.x += rel[0]
+        self.y += rel[1]
+        self.w -= rel[0]
+        self.h -= rel[1]
+        self.redraw()
+        self.on_resize()
+
+    def on_rt_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.w += rel[0]
+        self.y += rel[1]
+        self.h -= rel[1]
+        self.redraw()
+        self.on_resize()
+
+    def on_lb_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.x += rel[0]
+        self.w -= rel[0]
+        self.h += rel[1]
+        self.redraw()
+        self.on_resize()
+
+    def on_rb_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.w += rel[0]
+        self.h += rel[1]
+        self.redraw()
+        self.on_resize()
+
+    def on_lc_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.x += rel[0]
+        self.w -= rel[0]
+        self.redraw()
+        self.on_resize()
+
+    def on_rc_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.w += rel[0]
+        self.redraw()
+        self.on_resize()
+
+    def on_mt_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.x += rel[0]
+        self.y += rel[1]
+        self.redraw()
+        self.on_move()
+
+    def on_mt_move_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.y += rel[1]
+        self.h -= rel[1]
+        self.redraw()
+        self.on_resize()
+
+    def on_mb_change(self, pos: tuple, rel: tuple, buttons: list, touch: bool) -> None:
+        if not self.is_mouse_left_down:
+            return
+        self.h += rel[1]
+        self.redraw()
+        self.on_move()
 
     def is_self_hover(self) -> bool:
         return self.last_hover == self

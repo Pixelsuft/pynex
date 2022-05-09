@@ -112,13 +112,6 @@ def on_resize(w, h):
     update_info()
 
 
-def on_frame_mouse_move(pos, rel, buttons, touch):
-    if not frame.is_mouse_left_down:
-        return
-    frame.set('x', frame.x + round(rel[0]))
-    frame.set('y', frame.y + round(rel[1]))
-
-
 def on_mouse_move(pos, rel, buttons, touch):
     if not main_window.is_mouse_left_down:
         return
@@ -266,12 +259,6 @@ def toggle_sound(is_on):
                     ['pkill', 'timidity' if ps.is_midi else 'ffplay'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
                 )
         music.clear()
-
-
-def clear_frame():
-    if not bg_cleaner.is_visible:
-        return
-    frame.surface.fill((0, 0, 0))
 
 
 # Create image object
@@ -468,13 +455,12 @@ bg_cleaner.color_fade = pynex.NSimpleColorFade(
 
 # Create Frame
 luna = pynex.load_style_luna(os.path.join(pynex.cur_path, 'styles', 'luna'), (0, 255, 0, 255), 5)
-frame = pynex.NFrame(
+frame = pynex.NFrameLuna(
     main_window,
     (600, 400),
-    (500, 500)
-).set('z_order', 999).set('on_mouse_move', on_frame_mouse_move).set(
-    'on_before_draw', clear_frame
-).set('cursor', pynex.system_cursors.get('HAND')).set('current_cursor', pynex.system_cursors.get('HAND'))
+    (200, 200),
+    luna
+).set('z_order', 999)
 pynex.NWinAnimatedButton(
     frame,
     font,
