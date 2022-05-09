@@ -474,7 +474,7 @@ frame = pynex.NFrame(
     (500, 500)
 ).set('z_order', 999).set('on_mouse_move', on_frame_mouse_move).set(
     'on_before_draw', clear_frame
-).set('cursor', pynex.system_cursors.get('HAND'))
+).set('cursor', pynex.system_cursors.get('HAND')).set('current_cursor', pynex.system_cursors.get('HAND'))
 pynex.NWinAnimatedButton(
     frame,
     font,
